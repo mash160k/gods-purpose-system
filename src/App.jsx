@@ -5,7 +5,7 @@ import { supabase, getOrCreateUserSession, restoreAccountWithEmail } from './sup
 
 import { 
   FiSearch, FiSettings, FiBookmark, FiHome, FiBookOpen, 
-  FiList, FiX, FiChevronLeft, FiShare, FiHeart, FiCheck, 
+  FiList, FiX, FiChevronLeft, FiShare, FiCheck, 
   FiBell, FiMap, FiEdit2, FiUser, FiChevronRight, FiClock, 
   FiHeadphones, FiSun, FiMoon, FiRotateCcw, FiRotateCw, 
   FiDownloadCloud, FiShare2, FiEdit3, FiLogIn
@@ -1328,8 +1328,8 @@ function AppContent() {
             </div>
 
             <div className="px-5 -mt-3 relative z-10 space-y-4">
-              <div className="flex justify-between items-start">
-                <div>
+              <div className="flex justify-between items-start gap-3">
+                <div className="flex-1 min-w-0">
                   <p className="text-[10.5px] uppercase font-sans tracking-[0.16em] text-[#C6A87C] font-semibold">
                     {getFormattedDate()}
                   </p>
@@ -1352,9 +1352,9 @@ function AppContent() {
                 {!userProfile?.email && (
                   <button
                     onClick={() => openAuthModal('signin')}
-                    className="mt-1 text-[10px] text-[#C6A87C] border border-[#C6A87C]/30 bg-[#C6A87C]/10 px-2.5 py-1 rounded-full font-bold uppercase tracking-wider hover:bg-[#C6A87C]/20 active:scale-95 transition-all flex items-center gap-1 shadow-sm"
+                    className="mt-1 flex-shrink-0 whitespace-nowrap text-[11px] text-[#C6A87C] border border-[#C6A87C]/40 bg-[#C6A87C]/10 px-3.5 py-1.5 rounded-full font-bold uppercase tracking-wider hover:bg-[#C6A87C]/20 active:scale-95 transition-all flex items-center gap-1.5 shadow-sm"
                   >
-                    <FiLogIn size={11} />
+                    <FiLogIn size={12} />
                     <span>Sign In</span>
                   </button>
                 )}
@@ -1485,32 +1485,27 @@ function AppContent() {
                   }}
                   className="bg-[#161C24]/90 border border-[#C6A87C]/30 hover:border-[#C6A87C] p-4 rounded-2xl cursor-pointer active:scale-[0.99] transition-all shadow-md shadow-black/20"
                 >
-                  <div className="flex items-start gap-3.5">
-                    <div className="w-8 h-8 rounded-full bg-[#C6A87C]/15 text-[#C6A87C] flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <FiHeart size={15} />
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-[13px] font-semibold text-white leading-snug">
-                        Make This Journey Personal
-                      </p>
-                      <p className="text-[10.5px] text-gray-400 mt-0.5 leading-relaxed">
-                        Set your Life Verse, save reflections, track your journey, and protect your progress across all device cache clears.
-                      </p>
-                      <div className="mt-2.5 flex items-center gap-2">
-                        <span className="inline-block px-3 py-1 rounded-full bg-[#C6A87C] text-[#14202E] font-sans font-bold text-[10.5px] uppercase tracking-wider shadow-sm">
-                          Set Up My Profile →
-                        </span>
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            openAuthModal('signin');
-                          }}
-                          className="text-[10.5px] text-gray-400 hover:text-white underline ml-1"
-                        >
-                          or Sign In
-                        </button>
-                      </div>
+                  <div>
+                    <p className="text-[13.5px] font-semibold text-white leading-snug">
+                      Make This Journey Personal
+                    </p>
+                    <p className="text-[11px] text-gray-400 mt-1 leading-relaxed">
+                      Set your Life Verse, save reflections, track your journey, and protect your progress across all device cache clears.
+                    </p>
+                    <div className="mt-3 flex items-center gap-2">
+                      <span className="inline-block px-3.5 py-1.5 rounded-full bg-[#C6A87C] text-[#14202E] font-sans font-bold text-[10.5px] uppercase tracking-wider shadow-sm">
+                        Set Up My Profile →
+                      </span>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openAuthModal('signin');
+                        }}
+                        className="text-[10.5px] text-gray-400 hover:text-white underline ml-1.5"
+                      >
+                        or Sign In
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -2099,9 +2094,19 @@ function AppContent() {
 
                   <button
                     onClick={() => handleToggleAudio(currentBook, currentChapter)}
-                    className={`flex items-center gap-1.5 px-2.5 py-1.5 text-xs rounded-full font-medium ${isCurrentChapterAudioActive && isAudioPlaying ? 'bg-[#C6A87C] text-[#14202E] font-bold' : ''}`}
+                    className={`flex items-center gap-1.5 px-2.5 py-1.5 text-xs rounded-full font-medium transition-all ${
+                      isCurrentChapterAudioActive && isAudioPlaying 
+                        ? 'bg-transparent border border-[#C6A87C] text-[#C6A87C] font-bold shadow-sm' 
+                        : isBibleDark 
+                          ? 'text-gray-300 hover:text-white' 
+                          : 'text-[#1C2A39] hover:text-[#C6A87C]'
+                    }`}
                   >
-                    {isCurrentChapterAudioActive && isAudioPlaying ? <FaPause size={10} /> : <FiHeadphones size={13} className="text-[#C6A87C]" />}
+                    {isCurrentChapterAudioActive && isAudioPlaying ? (
+                      <FaPause size={10} className="text-[#C6A87C]" />
+                    ) : (
+                      <FiHeadphones size={13} className="text-[#C6A87C]" />
+                    )}
                     <span>{isCurrentChapterAudioActive && isAudioPlaying ? 'Playing' : 'Listen'}</span>
                   </button>
                 </div>
@@ -2157,17 +2162,17 @@ function AppContent() {
               })}
             </div>
 
-            {/* --- BOTTOM CHAPTER NAVIGATION FOOTER --- */}
+            {/* --- BOTTOM CHAPTER NAVIGATION FOOTER (CLEAR BG WITH BORDER ONLY) --- */}
             <div className="px-5 pt-4 pb-12 flex items-center justify-between gap-3 border-t border-black/5 dark:border-white/5">
               <button
                 onClick={handlePrevChapter}
                 disabled={!hasPrev}
-                className={`flex-1 py-3 px-4 rounded-2xl flex items-center justify-center gap-2 text-xs font-semibold tracking-wide transition-all ${
+                className={`flex-1 py-3 px-4 rounded-2xl flex items-center justify-center gap-2 text-xs font-semibold tracking-wide bg-transparent transition-all ${
                   hasPrev
                     ? isBibleDark
-                      ? 'bg-[#152233] text-gray-200 border border-gray-700/60 active:scale-95'
-                      : 'bg-white text-[#1C2A39] border border-[#ECE5D8] shadow-sm active:scale-95'
-                    : 'opacity-30 cursor-not-allowed bg-transparent border border-white/5 text-gray-500'
+                      ? 'border border-gray-700/80 text-gray-300 hover:border-[#C6A87C] hover:text-[#C6A87C] active:scale-95'
+                      : 'border border-[#D6C7AF] text-[#1C2A39] hover:border-[#C6A87C] hover:text-[#C6A87C] active:scale-95'
+                    : 'opacity-30 cursor-not-allowed border border-white/5 text-gray-500'
                 }`}
               >
                 <FiChevronLeft size={16} />
@@ -2177,12 +2182,14 @@ function AppContent() {
               <button
                 onClick={handleNextChapter}
                 disabled={!hasNext && !isPlanEnd}
-                className={`flex-1 py-3 px-4 rounded-2xl flex items-center justify-center gap-2 text-xs font-bold tracking-wide transition-all shadow-md active:scale-95 ${
+                className={`flex-1 py-3 px-4 rounded-2xl flex items-center justify-center gap-2 text-xs font-bold tracking-wide bg-transparent transition-all active:scale-95 ${
                   isPlanEnd
-                    ? 'bg-[#C6A87C] text-[#14202E]'
+                    ? 'border-2 border-[#C6A87C] text-[#C6A87C] hover:bg-[#C6A87C]/10'
                     : !hasNext
-                      ? 'opacity-30 cursor-not-allowed bg-gray-500 text-gray-300'
-                      : 'bg-[#C6A87C] text-[#14202E]'
+                      ? 'opacity-30 cursor-not-allowed border border-white/5 text-gray-500'
+                      : isBibleDark
+                        ? 'border border-[#C6A87C]/80 text-[#C6A87C] hover:border-[#C6A87C] hover:bg-[#C6A87C]/10'
+                        : 'border border-[#C6A87C] text-[#C6A87C] hover:bg-[#C6A87C]/10'
                 }`}
               >
                 <span>{isPlanEnd ? 'Complete Day' : 'Next Chapter'}</span>

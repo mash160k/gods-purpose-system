@@ -10,7 +10,7 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       workbox: {
-        maximumFileSizeToCacheInBytes: 30 * 1024 * 1024 // 30 MB limit for high-res assets & scripture JSON
+        maximumFileSizeToCacheInBytes: 30 * 1024 * 1024 // 30 MB limit
       },
       manifest: {
         name: "God's Purpose System",
@@ -21,14 +21,20 @@ export default defineConfig({
         display: "standalone",
         icons: [
           {
-            src: "/A splash.png",
+            src: "/icon-512.png",
             sizes: "192x192",
             type: "image/png"
           },
           {
-            src: "/A splash.png",
+            src: "/icon-512.png",
             sizes: "512x512",
             type: "image/png"
+          },
+          {
+            src: "/icon-512.png",
+            sizes: "512x512",
+            type: "image/png",
+            purpose: "any maskable"
           }
         ]
       }
