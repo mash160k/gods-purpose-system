@@ -5,55 +5,30 @@ import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
   plugins: [
-    tailwindcss(),
     react(),
+    tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: [
-        'favicon.ico',
-        'en_kjv.json',
-        '*.png',
-        '*.jpg',
-        '*.jpeg'
-      ],
+      workbox: {
+        maximumFileSizeToCacheInBytes: 30 * 1024 * 1024 // 30 MB limit for high-res assets & scripture JSON
+      },
       manifest: {
         name: "God's Purpose System",
         short_name: "GPS Bible",
-        description: "1-Year Chronological Audio Bible Walk",
-        theme_color: '#12161B',
-        background_color: '#12161B',
-        display: 'standalone',
-        orientation: 'portrait',
+        description: "Walk through the entire Bible in 365 days with audio narration and reflection.",
+        theme_color: "#1C2A39",
+        background_color: "#1C2A39",
+        display: "standalone",
         icons: [
           {
-            src: '/A splash.png',
-            sizes: '192x192',
-            type: 'image/png'
+            src: "/A splash.png",
+            sizes: "192x192",
+            type: "image/png"
           },
           {
-            src: '/A splash.png',
-            sizes: '512x512',
-            type: 'image/png',
-            purpose: 'any maskable'
-          }
-        ]
-      },
-      workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,json,jpg,jpeg}'],
-        runtimeCaching: [
-          {
-            urlPattern: ({ url }) => url.origin.includes('audiotreasure.com'),
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'gps-bible-audio-v1',
-              expiration: {
-                maxEntries: 60,
-                maxAgeSeconds: 30 * 24 * 60 * 60
-              },
-              cacheableResponse: {
-                statuses: [0, 200]
-              }
-            }
+            src: "/A splash.png",
+            sizes: "512x512",
+            type: "image/png"
           }
         ]
       }
