@@ -377,7 +377,6 @@ function AppContent() {
   });
 
   const [fontFamily, setFontFamily] = useState('font-serif');
-  // Comfortable typography scale
   const textSizes = ['text-[13px]', 'text-[15px]', 'text-[16.5px]', 'text-[18px]', 'text-[20px]'];
   const [textSizeIndex, setTextSizeIndex] = useState(1);
 
@@ -1175,23 +1174,27 @@ function AppContent() {
       return;
     }
     const totalChaptersInBook = booksList[currentBookIndex]?.chapters?.length || 1;
-    if (currentChapter < totalChaptersInBook) setCurrentChapter(currentChapter + 1);
-    else if (currentBookIndex < booksList.length - 1) {
+    if (currentChapter < totalChaptersInBook) {
+      setCurrentChapter(currentChapter + 1);
+      setCurrentVerse(1);
+    } else if (currentBookIndex < booksList.length - 1) {
       setCurrentBook(booksList[currentBookIndex + 1].name);
       setCurrentChapter(1);
+      setCurrentVerse(1);
     }
-    setCurrentVerse(1);
   };
 
   const handlePrevChapter = () => {
     triggerHaptic('light');
-    if (currentChapter > 1) setCurrentChapter(currentChapter - 1);
-    else if (currentBookIndex > 0) {
+    if (currentChapter > 1) {
+      setCurrentChapter(currentChapter - 1);
+      setCurrentVerse(1);
+    } else if (currentBookIndex > 0) {
       const prevBook = booksList[currentBookIndex - 1];
       setCurrentBook(prevBook.name);
       setCurrentChapter(prevBook.chapters.length);
+      setCurrentVerse(1);
     }
-    setCurrentVerse(1);
   };
 
   useEffect(() => {
@@ -2152,6 +2155,39 @@ function AppContent() {
                   </div>
                 );
               })}
+            </div>
+
+            {/* --- BOTTOM CHAPTER NAVIGATION FOOTER --- */}
+            <div className="px-5 pt-4 pb-12 flex items-center justify-between gap-3 border-t border-black/5 dark:border-white/5">
+              <button
+                onClick={handlePrevChapter}
+                disabled={!hasPrev}
+                className={`flex-1 py-3 px-4 rounded-2xl flex items-center justify-center gap-2 text-xs font-semibold tracking-wide transition-all ${
+                  hasPrev
+                    ? isBibleDark
+                      ? 'bg-[#152233] text-gray-200 border border-gray-700/60 active:scale-95'
+                      : 'bg-white text-[#1C2A39] border border-[#ECE5D8] shadow-sm active:scale-95'
+                    : 'opacity-30 cursor-not-allowed bg-transparent border border-white/5 text-gray-500'
+                }`}
+              >
+                <FiChevronLeft size={16} />
+                <span>Previous Chapter</span>
+              </button>
+
+              <button
+                onClick={handleNextChapter}
+                disabled={!hasNext && !isPlanEnd}
+                className={`flex-1 py-3 px-4 rounded-2xl flex items-center justify-center gap-2 text-xs font-bold tracking-wide transition-all shadow-md active:scale-95 ${
+                  isPlanEnd
+                    ? 'bg-[#C6A87C] text-[#14202E]'
+                    : !hasNext
+                      ? 'opacity-30 cursor-not-allowed bg-gray-500 text-gray-300'
+                      : 'bg-[#C6A87C] text-[#14202E]'
+                }`}
+              >
+                <span>{isPlanEnd ? 'Complete Day' : 'Next Chapter'}</span>
+                <FiChevronRight size={16} />
+              </button>
             </div>
           </main>
         )}
