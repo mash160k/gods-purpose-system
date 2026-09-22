@@ -1,11 +1,12 @@
 @import "tailwindcss";
 
 body {
-  background-color: #111827; 
+  background-color: #111827;
   color: #F3F4F6;
   margin: 0;
   padding: 0;
 }
+
 @keyframes slide-up {
   from { transform: translateY(100%); }
   to { transform: translateY(0); }
