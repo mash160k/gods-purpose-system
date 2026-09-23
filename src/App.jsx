@@ -146,7 +146,7 @@ class ErrorBoundary extends Component {
 function SplashScreen({ isFading, onBegin, onOpenAuth }) {
   return (
     <div
-      className={`fixed inset-0 z-[100] flex flex-col items-center justify-between bg-[#D6C2A5] transition-opacity duration-700 ease-out select-none ${
+      className={`fixed inset-0 z-[100] flex flex-col items-center justify-between bg-[#12161B] transition-opacity duration-700 ease-out select-none ${
         isFading ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'
       }`}
     >
@@ -162,7 +162,7 @@ function SplashScreen({ isFading, onBegin, onOpenAuth }) {
             triggerHaptic('light');
             onBegin();
           }}
-          className="w-full py-3.5 px-6 rounded-full bg-black/25 hover:bg-black/40 active:scale-95 backdrop-blur-sm border border-white/80 text-white font-serif text-[15px] tracking-[0.15em] uppercase font-medium shadow-lg transition-all duration-200"
+          className="w-full py-3.5 px-6 rounded-full bg-black/40 hover:bg-black/60 active:scale-95 backdrop-blur-sm border border-white/80 text-white font-serif text-[15px] tracking-[0.15em] uppercase font-medium shadow-lg transition-all duration-200"
         >
           Begin the Journey
         </button>
@@ -227,24 +227,109 @@ const JOURNEY_ERAS = [
   { id: 7, title: 'Early Church', subtitle: 'The mission continues.', startDay: 331, endDay: 365, img: '/Early Church.png' }
 ];
 
+// --- 17 FEATURED DIRECTIONS ---
 const FEATURED_DIRECTIONS = [
   {
     id: 'surrender',
     title: 'Surrender',
-    image: '/App%20Jesus.png',
-    description: `Jesus, washing His disciples' feet, came to Peter. When He went to wash Peter's feet, Peter protested, "No—you will never wash my feet." It was as though Peter was saying, "You are the Lord. I should be the one washing Yours."\n\nAs humble as that sounds, Jesus replies to Peter that if he does not allow Him to wash his feet, he has no part with Him. We can sit down and wash Jesus' feet a thousand times a day, but at the end of the day, all that can be said is, "Look what I've done."\n\nThe question is this: Have we surrendered to grace? Have we let Jesus wash our feet? Then—all that can be said at the end of the day is, "Look what Jesus has done."`
+    image: '/App%20Jesus.jpeg',
+    description: `Jesus, washing His disciples' feet, came to Peter. When He went to wash Peter's feet, Peter protested, "No—you will never wash my feet." It was as though Peter was saying, "You are the Lord. I should be the one washing Yours." As humble as that sounds, Jesus replies to Peter that if he does not allow Him to wash his feet, he has no part with Him. We can sit down and wash Jesus' feet a thousand times a day, but at the end of the day, all that can be said is, "Look what I've done." The question is this: Have we surrendered to grace? Have we let Jesus wash our feet? Then—all that can be said at the end of the day is, "Look what Jesus has done."`
   },
   {
     id: 'happiness',
     title: 'Happiness',
-    image: '/App happiness.jpg',
-    description: `The path of happiness and joy is\nto see the glass half full not half empty.\nTo think of what we do have\nand not what we don't have.\nTo look at what we are gaining\nnot what we are loosing.\nTo focus on loving\ninstead of being loved.`
+    image: '/App%20happiness.jpg',
+    description: `The path of happiness and joy is to see the glass half full not half empty. To think of what we do have and not what we don't have. To look at what we are gaining not what we are loosing. To focus on loving instead of being loved.`
   },
   {
     id: 'followme',
     title: 'Follow Me',
-    image: '/App footprints.jpg',
-    description: `Jesus and Peter walked together one day—\nNot on the water this time, but on the beach.\nJesus was telling Peter the things he would have to endure in the future. Peter looked around and asked about another disciple named John. Jesus replied, "What is that to you? You follow me."\n\nYou may think to yourself, 'There are others who can do things better than I.' Now hear Him say to you, "What is that to you, you follow me."\n\nYou may think, 'There are already pictures painted, songs sung, books written, why should I?' But again, hear Him say, "What is that to you? You follow me." People say and do things that hurt sometimes. But when you lean in close you can hear Him whisper,\n"What is that to you, you follow me."`
+    image: '/App%20footprints.jpg',
+    description: `Jesus and Peter walked together one day— Not on the water this time, but on the beach. Jesus was telling Peter the things he would have to endure in the future. Peter looked around and asked about another disciple named John. Jesus replied, "What is that to you? You follow me." You may think to yourself, 'There are others who can do things better than I.' Now hear Him say to you, "What is that to you, you follow me." You may think, 'There are already pictures painted, songs sung, books written, why should I?' But again, hear Him say, "What is that to you? You follow me." People say and do things that hurt sometimes. But when you lean in close you can hear Him whisper, "What is that to you, you follow me."`
+  },
+  {
+    id: 'rest',
+    title: 'Rest',
+    image: '/AAA4.jpeg',
+    description: `The heart beats day and night year after year. The secret to its longevity? It doesn't beat until it gets to rest; it is at rest until it beats. In trusting Jesus, instead of working towards something, we are able to work from something. Our place of rest in him. He says come unto me, and I will give you rest.`
+  },
+  {
+    id: 'separate',
+    title: 'Separate',
+    image: '/AAA5.jpg',
+    description: `She sat there on the couch—an older couch with one long cushion that stretched from one arm to the other. With her glass of tea in hand, her husband suddenly sat down hard beside her. The ice was cold as the tea spilled into her lap and onto the couch. Several weeks later, she sat once again on the couch, enjoying her glass of tea. And again— her husband suddenly sat down hard beside her. Only this time, her tea remained in its place, her clothes were dry, and the couch unstained. The difference? They had purchased a new couch. Unlike the old one, which had one long cushion, this new one had three separate cushions. As she sat there on that cushion… she was unmoved. Father, help us stay separate from the world—unmoved. To be one with You, so that we will be moved only by You.`
+  },
+  {
+    id: 'bestill',
+    title: 'Be Still',
+    image: '/AAA6.jpg',
+    description: `The Bible tells us, "Be still and know that I am God." Have you ever left home and wondered if you remembered to turn off the stove eye, or if you unplugged the iron. There is an unrest until you stop and take time to call home or go back to make sure that it is off. Once you know it is off there is a rest. Many of us go throughout our days and even our lives with an unrest, being anxious about many things. God invites us to stop, be still and take time to know.`
+  },
+  {
+    id: 'power',
+    title: 'Power',
+    image: '/AAA7.jpg',
+    description: `The apostle Paul prayed and prayed and prayed that God would take something hurtful out of his life. Each time, God answered him by saying, my grace is sufficient, in your weakness my strength is made perfect. It's as if God is saying, I may never answer your prayer to be made strong, but in your weakness, I will be your strength. We don't have to struggle to be strong enough, because he is our strength. We don't have to struggle to be good enough, because he is our righteousness. He is everything we are not. When we are short he is that much longer, when we are weak he is that much stronger. It's not in trying, but in trusting. It's not in running but in resting. It's not in wandering, but in waiting that we find the strength of the Lord.`
+  },
+  {
+    id: 'purpose',
+    title: 'Purpose',
+    image: '/AAA8.jpeg',
+    description: `The same God who put the stars, the sun and the moon in their place thought it was a good idea to put you here too. The same way the sun has it's purpose, you have a reason for being here. When the end comes, and we look back at our life, I'm sure we will realize that our life mattered more than we thought it did. God had something He wanted to share with everyone, so He took it and put it inside of you. So many people die with the song, the poem, a book or simply a life well lived still inside them.`
+  },
+  {
+    id: 'peace',
+    title: 'Peace',
+    image: '/AAA9.jpg',
+    description: `There is a peace that goes all the way down and hits bottom. The search is over. No need to hurry to get to a certain place. No need to wait for anything else to happen. Completely at rest because we know God loves us and He is in control.`
+  },
+  {
+    id: 'truth',
+    title: 'Truth',
+    image: '/AAA10.jpg',
+    description: `If we don't want to be crushed by the truth, agree with it, flow with it, and roll with it. It is sure and unchanging. If a child, on his math school work answers 2+2=5, his teacher will put an x on the answer because it isn't true. If the child doesn't agree with the truth and later tries to build a house with the idea that 2+2=5, his house will be a shamble. Agree with the truth. There is good success.`
+  },
+  {
+    id: 'wisdom',
+    title: 'Wisdom',
+    image: '/AAA11.jpeg',
+    description: `There are but 26 letters in the alphabet, but in their arrangement, make up the entire English dictionary. How are the laws that are constant and unchangeable. Laws set up by the Creator that govern all things. Even the Earth, in the middle of immense space, is kept from chaotic movement. The law- a house divided against itself cannot stand can be seen throughout creation in everyday life. Cleaning house while the kids are still growing and shoveling snow while it is still snowing. Trying to raise a window with one hand while pressing down on it with the other. This truth can be seen in many varied situations, just as an A can be seen in many different words. Arranged to create sentences, paragraphs, and stories. Wisdom recognizes these truths, laws, and writes a story of a life well lived. "Everyone who hears my words and obeys them is like a wise man who built his house on a rock." Jesus`
+  },
+  {
+    id: 'newcreation',
+    title: 'New Creation',
+    image: '/AAA12.jpg',
+    description: `Her son had been struck by lightning, what are the chances, not a cloud in the sky. The doctors had told her there was no way he could live. How would she face tomorrow without him there? After all the hopeless tears and sleepless nights...he lived. Her reply, the echo of a heart broken and revived again. "You know," she said, "I used to get so upset when he would come in and get mud on clean floor. Now… I'm just thankful there is someone there to get mud on my floor." Father, Isn't it true we are the ones. When we think we are going to lose everything we settle for anything? But isn't this the new creature in Christ? We are crucified...yet living. Thankful.`
+  },
+  {
+    id: 'thankful',
+    title: 'Thankful',
+    image: '/AAA13.jpg',
+    description: `It was a cold winter night as she drove home from work. She had driven half way home and then remembered to turn on the heater. As she reaches to turn it on, she began to think of all the people who have no heat—little children with no blankets, living in cardboard boxes trying to stay warm. She decided not to turn it on. How could she turn the heat on and be warm when others were so cold? It is then she hears, in her heart: " Just say thank you... and turn it on." Being thankful, the blessing became pure to her. Father, create in us a pure heart.`
+  },
+  {
+    id: 'letgo',
+    title: 'Let Go',
+    image: '/AAA14.jpg',
+    description: `That little monkey was stuck and he couldn't figure out what he needed to do to get free. The man, hiding behind a rock, has cut a hole in the coconut and placed a peanut inside, now has a string attached to the other end waiting for the little monkey. Little one puts his hand inside to get the peanut and he can't get his hand back out. In all his distress he can't figure out that because he was holding onto the peanut he couldn't get his hand out of the hole. If he would only let go, he could be free. Father, we can afford to let go of things because you have given us yourself.`
+  },
+  {
+    id: 'obedience',
+    title: 'Obedience',
+    image: '/AAA15.jpg',
+    description: `Sitting there at her desk, out of the blue she feels this impression to reach over and move something that is on her desk. She saw no reason to move it. It seemed fine where it was. This little voice persisted. Finally, after thinking "I don't know why I am doing this." She reaches over and moves it to another place. Lo and behold behind it was that thing she had been searching for. The lesson? There is something behind that thing God is telling you to do.`
+  },
+  {
+    id: 'tametongue',
+    title: 'Tame Tongue',
+    image: '/AAA16.jpg',
+    description: `The Bible says that no one can tame the tongue, the one who can is the same as a perfect man. No one is perfect because they can tame their tongue, but they can tame their tongue because they are perfect. If someone is content in whatever state they are in, there will be no complaint on their lips.`
+  },
+  {
+    id: 'bornagain',
+    title: 'Born Again',
+    image: '/AAA17.jpeg',
+    description: `The most important decision anyone will ever make is the decision to be born again. As a tree branches into the seen and into the unseen, we too have a body and a spirit. We are born with a body, but unless someone is born of the spirit also, the abundant life that was meant for them since the beginning is not there. The thief on the cross asked Jesus to remember him and Jesus said, you will be with me in paradise. The thief simply believed. Jesus forgives us and gives us a new beginning, changing our heart. A Guiding Prayer (example) Father in heaven I believe you sent your son Jesus to pay for my wrongs and I trust him to make me new and to give me a life that never ends with you. Take my life, I'm listening. Guide me until I meet you face to face.`
   }
 ];
 
@@ -1370,7 +1455,7 @@ function AppContent() {
                   
                   {completedDays.length > 0 && (
                     <span className="text-[10.5px] text-gray-400 font-medium flex items-center gap-1.5 bg-black/25 px-2.5 py-1 rounded-full border border-white/5">
-                      <span className="text-[#C6A87C]">🔥</span> {completedDays.length} day journey
+                       {completedDays.length} day journey
                     </span>
                   )}
                 </div>
@@ -1394,13 +1479,13 @@ function AppContent() {
                     </div>
                   </div>
 
-                  <div className="w-[52px] h-[52px] rounded-2xl overflow-hidden border border-[#C6A87C]/30 flex-shrink-0 shadow-md bg-black/40">
-                    <img 
-                      src={activeEra?.img || '/Creation.png'} 
-                      alt={activeEra?.title || 'Milestone'} 
-                      className="w-full h-full object-cover object-center"
-                    />
-                  </div>
+                  <div className="w-[52px] h-[52px] rounded-full overflow-hidden bg-[#161C24] flex-shrink-0 shadow-md border border-white/5 relative">
+                <img 
+                  src={activeEra?.img || '/Creation.png'} 
+                  alt={activeEra?.title || 'Milestone'} 
+                  className="w-full h-full object-cover object-center scale-[1.38] rounded-full"
+                />
+              </div>
                 </div>
 
                 {!isBrandNewUser && (
@@ -1657,17 +1742,7 @@ function AppContent() {
                           }}
                         />
 
-                        <div className="absolute top-2.5 right-2.5">
-                          {isRead ? (
-                            <div className="w-5 h-5 rounded-full bg-[#14202E]/80 backdrop-blur-sm border border-[#C6A87C] flex items-center justify-center text-[10px] text-[#C6A87C]">
-                              <FiCheck size={10} strokeWidth={3} />
-                            </div>
-                          ) : (
-                            <div className="w-5 h-5 rounded-full bg-black/50 backdrop-blur-sm border border-white/20 flex items-center justify-center text-[10px] text-[#C6A87C]">
-                              ✦
-                            </div>
-                          )}
-                        </div>
+                      
 
                         <div className="absolute inset-x-0 bottom-0 pt-12 pb-3.5 px-3 bg-gradient-to-t from-[#0A1017] via-[#0A1017]/75 to-transparent">
                           <p className="text-[12.5px] font-serif font-medium text-white leading-tight">
@@ -1851,8 +1926,8 @@ function AppContent() {
                           className="flex items-center justify-between border-b border-[#222B35]/70 pb-2.5 cursor-pointer select-none active:opacity-75 transition-opacity"
                         >
                           <div className="flex items-center gap-2.5">
-                            <div className="w-10 h-10 rounded-full overflow-hidden bg-[#1A212B] border border-[#2B3746] flex-shrink-0 shadow-sm">
-                              <img src={era.img} alt={era.title} className="w-full h-full object-cover" />
+                            <div className="w-10 h-10 rounded-full overflow-hidden bg-black border border-black flex-shrink-0 shadow-sm ring-1 ring-black">
+                              <img src={era.img} alt={era.title} className="w-full h-full object-cover bg-black" />
                             </div>
                             <div>
                               <p className={`text-[7.5px] font-bold tracking-[0.22em] uppercase mb-0.5 ${isCurrentEra ? 'text-[#C6A87C]' : 'text-gray-400'}`}>
@@ -1886,8 +1961,8 @@ function AppContent() {
                                 <div className="rounded-2xl p-3 shadow-md border mb-3 w-full bg-[#161C24]/90 border-[#26313E]">
                                   <div className="flex items-center justify-between gap-2">
                                     <div className="flex items-center gap-2.5 min-w-0">
-                                      <div className="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 shadow-sm border border-[#2B3746]">
-                                        <img src={ABRAHAM_ACTIVE_URL} alt="Active Day" className="w-full h-full object-cover" />
+                                      <div className="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 shadow-sm border border-black bg-black ring-1 ring-black">
+                                        <img src={ABRAHAM_ACTIVE_URL} alt="Active Day" className="w-full h-full object-cover bg-black" />
                                       </div>
                                       <div className="flex flex-col justify-center min-w-0">
                                         <p className="text-[#C6A87C] text-[7.5px] font-bold tracking-[0.22em] uppercase mb-0.5">DAY {currentJourneyDay.day}</p>
@@ -1968,8 +2043,8 @@ function AppContent() {
                             {isCompleted && (
                               <div className="rounded-2xl p-3 shadow-sm border mb-2 bg-[#161C24]/80 border-[#26313E] flex items-center justify-between">
                                 <div className="flex items-center gap-2.5">
-                                  <div className="w-12 h-12 rounded-xl overflow-hidden shadow-sm flex-shrink-0 border border-[#2B3746]">
-                                    <img src={era.img} alt={era.title} className="w-full h-full object-cover" />
+                                  <div className="w-12 h-12 rounded-xl overflow-hidden shadow-sm flex-shrink-0 border border-black bg-black ring-1 ring-black">
+                                    <img src={era.img} alt={era.title} className="w-full h-full object-cover bg-black" />
                                   </div>
                                   <div>
                                     <span className="text-[7.5px] text-[#43A047] font-bold tracking-wider uppercase">Completed • Days {era.startDay}–{era.endDay}</span>
@@ -1995,8 +2070,8 @@ function AppContent() {
                             {isFuture && (
                               <div className="rounded-2xl p-3 shadow-sm border mb-2 bg-[#161C24]/50 border-[#26313E] flex items-center justify-between">
                                 <div className="flex items-center gap-2.5">
-                                  <div className="w-12 h-12 rounded-xl overflow-hidden shadow-sm flex-shrink-0 opacity-70 border border-[#2B3746]">
-                                    <img src={era.img} alt={era.title} className="w-full h-full object-cover" />
+                                  <div className="w-12 h-12 rounded-xl overflow-hidden shadow-sm flex-shrink-0 opacity-70 border border-black bg-black ring-1 ring-black">
+                                    <img src={era.img} alt={era.title} className="w-full h-full object-cover bg-black" />
                                   </div>
                                   <div>
                                     <span className="text-[7.5px] text-[#C6A87C] font-bold tracking-wider uppercase">Starts on Day {era.startDay}</span>
@@ -2207,27 +2282,19 @@ function AppContent() {
                 <img src={HOME_BG_URL} alt="Header Background" className="w-full h-full object-cover" />
               </div>
               <div className="absolute inset-0 bg-gradient-to-b from-[#0f1724]/85 to-[#0f1724]/10" />
-              <div className="relative z-10 flex justify-between items-center mb-6">
-                <div className="w-5" />
-                <div className="flex flex-col items-center">
-                  <span className="font-['Times_New_Roman',serif] text-base tracking-wide flex items-center gap-1.5 text-white">
-                    <span className="text-lg">✝</span> God's Purpose System
-                  </span>
-                  <span className="text-[0.45rem] tracking-widest text-gray-300 uppercase mt-0.5">Led by the Spirit into all the truth.</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  {!userProfile?.email && (
-                    <button onClick={() => openAuthModal('signin')} className="text-[9.5px] text-[#C6A87C] border border-[#C6A87C]/40 bg-[#C6A87C]/10 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">
-                      Sign In
-                    </button>
-                  )}
-                  <FiBell size={18} className="text-gray-300" />
-                </div>
-              </div>
+              <div className="relative z-10 flex justify-end items-center mb-6">
+            <div className="flex items-center gap-2">
+              {!userProfile?.email && (
+                <button onClick={() => openAuthModal('signin')} className="text-[9.5px] text-[#C6A87C] border border-[#C6A87C]/40 bg-[#C6A87C]/10 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">
+                  Sign In
+                </button>
+              )}
+              <FiBell size={18} className="text-gray-300" />
+            </div>
+          </div>
               <div className="relative z-10 flex justify-between items-end">
                 <div>
-                  <h1 className="text-2xl font-serif text-white mb-0.5">Journal</h1>
-                  <p className="text-[9px] tracking-widest text-gray-300 uppercase">A Safe Place to Meet with God</p>
+                 <h1 className="text-2xl font-serif text-white mb-0.5">Journal</h1>
                 </div>
                 <div className="text-right max-w-[110px]">
                   <p className="text-[10px] italic text-gray-200 mb-0.5 leading-tight">"Commit your way to the LORD..."</p>
@@ -2540,6 +2607,66 @@ function AppContent() {
           </div>
         )}
 
+        {/* --- FEATURED DIRECTION DEVOTIONAL MODAL --- */}
+        {selectedDirection && (
+          <div className="absolute inset-0 z-50 flex flex-col justify-end bg-black/75 backdrop-blur-sm animate-in fade-in duration-200">
+            <div className="bg-[#161C24] text-white w-full max-h-[85vh] rounded-t-[2.2rem] flex flex-col shadow-2xl border-t border-[#26313E] overflow-hidden">
+              <div className="relative w-full h-48 flex-shrink-0 bg-black border-b border-black">
+                <img
+                  src={selectedDirection.image}
+                  alt={selectedDirection.title}
+                  className="w-full h-full object-cover object-center bg-black"
+                  onError={(e) => {
+                    if (!e.target.dataset.retried) {
+                      e.target.dataset.retried = 'true';
+                      e.target.src = selectedDirection.image.includes('%20')
+                        ? decodeURIComponent(selectedDirection.image)
+                        : encodeURI(selectedDirection.image);
+                    }
+                  }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#161C24] via-[#161C24]/40 to-transparent" />
+                <button
+                  onClick={() => {
+                    triggerHaptic('light');
+                    setSelectedDirection(null);
+                  }}
+                  className="absolute top-4 right-4 w-8 h-8 rounded-full bg-black/70 backdrop-blur-md text-white flex items-center justify-center hover:bg-black/90 active:scale-95 transition-all shadow-lg"
+                >
+                  <FiX size={18} />
+                </button>
+              </div>
+
+              <div className="p-6 overflow-y-auto flex-1 space-y-4">
+                <div>
+                  <span className="text-[10px] font-sans uppercase tracking-[0.2em] font-bold text-[#C6A87C]">
+                    Featured Direction
+                  </span>
+                  <h2 className="text-2xl font-serif text-white font-normal mt-0.5">
+                    {selectedDirection.title}
+                  </h2>
+                </div>
+
+                <div className="font-serif text-[14.5px] text-gray-200 leading-[1.8] whitespace-pre-wrap">
+                  {selectedDirection.description}
+                </div>
+              </div>
+
+              <div className="p-4 border-t border-black bg-[#12161B]">
+                <button
+                  onClick={() => {
+                    triggerHaptic('light');
+                    setSelectedDirection(null);
+                  }}
+                  className="w-full py-3 bg-[#C6A87C] text-[#14202E] font-bold text-xs rounded-xl uppercase tracking-wider shadow-md active:scale-95 transition-transform"
+                >
+                  Close Devotion
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* --- AUTH MODAL --- */}
         {isAuthModalOpen && (
           <div className="absolute inset-0 z-50 flex flex-col justify-end bg-black/80 backdrop-blur-sm">
@@ -2548,13 +2675,13 @@ function AppContent() {
                 <div className="flex gap-4">
                   <button
                     onClick={() => { triggerHaptic('light'); setAuthMode('signin'); setAuthError(''); }}
-                    className={`text-sm font-sans font-bold pb-1 ${authMode === 'signin' ? 'text-[#C6A87C] border-b-2 border-[#C6A87C]' : 'text-gray-400'}`}
+                    className={`text-sm font-sans font-bold pb-1 ${authMode === 'signin' ? 'text-[#C6A87C]' : 'text-gray-400'}`}
                   >
                     Sign In
                   </button>
                   <button
                     onClick={() => { triggerHaptic('light'); setAuthMode('signup'); setAuthError(''); }}
-                    className={`text-sm font-sans font-bold pb-1 ${authMode === 'signup' ? 'text-[#C6A87C] border-b-2 border-[#C6A87C]' : 'text-gray-400'}`}
+                    className={`text-sm font-sans font-bold pb-1 ${authMode === 'signup' ? 'text-[#C6A87C]' : 'text-gray-400'}`}
                   >
                     Create Account
                   </button>
@@ -2613,6 +2740,111 @@ function AppContent() {
                   className="w-full py-2.5 mt-2 bg-[#C6A87C] text-[#14202E] font-bold text-xs rounded-xl shadow-md"
                 >
                   {authLoading ? 'Connecting...' : authMode === 'signin' ? 'Sign In & Restore' : 'Create & Protect Progress'}
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* --- QUICK NOTE MODAL --- */}
+        {isQuickNoteOpen && (
+          <div className="absolute inset-0 z-50 flex flex-col justify-end bg-black/80 backdrop-blur-sm">
+            <div className="bg-[#161C24] text-white rounded-t-[2.2rem] p-6 border-t border-[#26313E] shadow-2xl space-y-3">
+              <div className="flex justify-between items-center border-b border-white/10 pb-2">
+                <span className="text-xs uppercase tracking-wider font-bold text-[#C6A87C]">Quick Reflection / Prayer</span>
+                <button onClick={() => setIsQuickNoteOpen(false)} className="text-gray-400 hover:text-white p-1">
+                  <FiX size={18} />
+                </button>
+              </div>
+              <textarea
+                value={quickNoteText}
+                onChange={(e) => setQuickNoteText(e.target.value)}
+                placeholder="Write what God is laying on your heart right now..."
+                className="w-full h-32 text-xs p-3 rounded-xl border border-white/10 bg-[#0D1217] text-white outline-none focus:border-[#C6A87C] resize-none leading-relaxed font-serif"
+                autoFocus
+              />
+              <button
+                onClick={handleSaveQuickNote}
+                disabled={!quickNoteText.trim()}
+                className={`w-full py-2.5 rounded-xl font-bold text-xs shadow-md transition-all ${
+                  quickNoteText.trim()
+                    ? 'bg-[#C6A87C] text-[#14202E] active:scale-95'
+                    : 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                }`}
+              >
+                Save Reflection
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* --- EDIT PROFILE MODAL --- */}
+        {isEditProfileOpen && (
+          <div className="absolute inset-0 z-50 flex flex-col justify-end bg-black/80 backdrop-blur-sm">
+            <div className="bg-[#161C24] text-white rounded-t-[2.2rem] p-6 border-t border-[#26313E] shadow-2xl space-y-4 max-h-[85vh] overflow-y-auto">
+              <div className="flex justify-between items-center border-b border-white/10 pb-2">
+                <h3 className="text-sm font-sans font-bold text-white">Edit Your Profile</h3>
+                <button onClick={() => setIsEditProfileOpen(false)} className="text-gray-400 hover:text-white p-1">
+                  <FiX size={18} />
+                </button>
+              </div>
+
+              <form onSubmit={handleSaveProfile} className="space-y-3.5">
+                <div>
+                  <label className="block text-[10px] uppercase font-bold text-gray-400 mb-1">Your Name</label>
+                  <input
+                    type="text"
+                    required
+                    value={editForm.name}
+                    onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                    className="w-full text-xs p-2.5 rounded-xl border border-white/10 bg-[#0D1217] text-white outline-none focus:border-[#C6A87C]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[10px] uppercase font-bold text-gray-400 mb-1">Life Verse Reference</label>
+                  <input
+                    type="text"
+                    value={editForm.lifeVerse}
+                    onChange={(e) => setEditForm({ ...editForm, lifeVerse: e.target.value })}
+                    placeholder="e.g. Jeremiah 29:11"
+                    className="w-full text-xs p-2.5 rounded-xl border border-white/10 bg-[#0D1217] text-white outline-none focus:border-[#C6A87C]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[10px] uppercase font-bold text-gray-400 mb-1">Purpose Motto</label>
+                  <input
+                    type="text"
+                    value={editForm.purposeMotto}
+                    onChange={(e) => setEditForm({ ...editForm, purposeMotto: e.target.value })}
+                    placeholder="e.g. Led by the Spirit into all the truth."
+                    className="w-full text-xs p-2.5 rounded-xl border border-white/10 bg-[#0D1217] text-white outline-none focus:border-[#C6A87C]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[10px] uppercase font-bold text-gray-400 mb-1.5">Choose Avatar</label>
+                  <div className="grid grid-cols-4 gap-2">
+                    {AVATAR_PRESETS.map((url, i) => (
+                      <div
+                        key={i}
+                        onClick={() => setEditForm({ ...editForm, avatarUrl: url })}
+                        className={`w-14 h-14 rounded-full overflow-hidden border-2 cursor-pointer transition-all ${
+                          editForm.avatarUrl === url ? 'border-[#C6A87C] scale-105 shadow-md' : 'border-transparent opacity-60'
+                        }`}
+                      >
+                        <img src={url} alt={`Avatar ${i}`} className="w-full h-full object-cover" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full py-2.5 mt-2 bg-[#C6A87C] text-[#14202E] font-bold text-xs rounded-xl uppercase tracking-wider shadow-md"
+                >
+                  Save Changes
                 </button>
               </form>
             </div>
