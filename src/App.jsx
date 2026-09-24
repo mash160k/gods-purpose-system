@@ -1404,7 +1404,7 @@ function AppContent() {
   }
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-[#060B12] selection:bg-[#C6A87C] selection:text-white">
+    <div className="fixed inset-0 flex justify-center items-center bg-[#060B12] overflow-hidden overscroll-none selection:bg-[#C6A87C] selection:text-white">
       {showSplash && (
         <SplashScreen 
           isFading={splashFading} 

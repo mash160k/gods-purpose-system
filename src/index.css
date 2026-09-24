@@ -1,17 +1,15 @@
 @import "tailwindcss";
 
-body {
-  background-color: #111827;
+html, body {
+  background-color: #12161B;
   color: #F3F4F6;
   margin: 0;
   padding: 0;
+  /* This completely stops the rubber-band bouncing / "play" at the top and bottom */
+  overscroll-behavior-y: none; 
 }
 
-@keyframes slide-up {
-  from { transform: translateY(100%); }
-  to { transform: translateY(0); }
-}
-
-.animate-slide-up {
-  animation: slide-up 0.3s ease-out forwards;
+#root {
+  height: 100%;
+  width: 100%;
 }
