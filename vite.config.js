@@ -14,7 +14,7 @@ export default defineConfig({
       },
       manifest: {
         name: "God's Purpose System",
-        short_name: "GPS Bible",
+        short_name: "GPS",
         description: "Walk through the entire Bible in 365 days with audio narration and reflection.",
         theme_color: "#1C2A39",
         background_color: "#1C2A39",

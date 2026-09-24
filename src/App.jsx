@@ -151,7 +151,7 @@ function SplashScreen({ isFading, onBegin, onOpenAuth }) {
       }`}
     >
       <img
-        src="/A splash.png"
+        src="/A%20splash.png?v=2"
         alt="God's Purpose System"
         className="absolute inset-0 w-full h-full object-cover object-center max-w-[430px] mx-auto pointer-events-none"
       />
@@ -181,8 +181,8 @@ function SplashScreen({ isFading, onBegin, onOpenAuth }) {
   );
 }
 
-const HOME_BG_URL = "/home-bg-1.png";
-const ABRAHAM_ACTIVE_URL = "/Patriarchs.png";
+const HOME_BG_URL = "/home-bg-1.png?v=2";
+const ABRAHAM_ACTIVE_URL = "/Patriarchs.png?v=2";
 
 const AVATAR_PRESETS = [
   "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=200&h=200&fit=crop&crop=faces,center",
@@ -198,14 +198,14 @@ const DEFAULT_PLAN_ITEM = {
   startChapter: 1,
   endBook: "Genesis",
   endChapter: 3,
-  image: "/Reading-top.png"
+  image: "/Reading-top.png?v=2"
 };
 
 const safePlanSource = Array.isArray(RAW_PLAN) && RAW_PLAN.length > 0 ? RAW_PLAN : [
   ["In the Beginning", "Genesis", 1, "Genesis", 3]
 ];
 
-const safeImages = Array.isArray(PLAN_IMAGES) && PLAN_IMAGES.length > 0 ? PLAN_IMAGES : ["/Reading-top.png"];
+const safeImages = Array.isArray(PLAN_IMAGES) && PLAN_IMAGES.length > 0 ? PLAN_IMAGES : ["/Reading-top.png?v=2"];
 
 const CHRONOLOGICAL_PLAN = safePlanSource.map((entry, index) => ({
   day: index + 1,
@@ -214,17 +214,17 @@ const CHRONOLOGICAL_PLAN = safePlanSource.map((entry, index) => ({
   startChapter: Number(entry[2]) || 1,
   endBook: entry[3] || "Genesis",
   endChapter: Number(entry[4]) || 1,
-  image: safeImages[index % safeImages.length] || "/Reading-top.png"
+  image: safeImages[index % safeImages.length] || "/Reading-top.png?v=2"
 }));
 
 const JOURNEY_ERAS = [
-  { id: 1, title: 'Creation', subtitle: 'In the beginning, God...', startDay: 1, endDay: 7, img: '/Creation.png' },
-  { id: 2, title: 'Patriarchs', subtitle: 'Faith in the unseen.', startDay: 8, endDay: 21, img: '/Patriarchs.png' },
-  { id: 3, title: 'Exodus', subtitle: "Freedom, faith, and God's provision.", startDay: 22, endDay: 90, img: '/Exodus.png' },
-  { id: 4, title: 'Kingdoms', subtitle: 'A people, a king, a greater King.', startDay: 91, endDay: 180, img: '/Kingdoms.png' },
-  { id: 5, title: 'Exile', subtitle: 'Even in the darkness, He is working.', startDay: 181, endDay: 240, img: '/Exile.png' },
-  { id: 6, title: 'Jesus', subtitle: 'The fulfillment of it all.', startDay: 241, endDay: 330, img: '/Jesus.png' },
-  { id: 7, title: 'Early Church', subtitle: 'The mission continues.', startDay: 331, endDay: 365, img: '/Early Church.png' }
+  { id: 1, title: 'Creation', subtitle: 'In the beginning, God...', startDay: 1, endDay: 7, img: '/Creation.png?v=2' },
+  { id: 2, title: 'Patriarchs', subtitle: 'Faith in the unseen.', startDay: 8, endDay: 21, img: '/Patriarchs.png?v=2' },
+  { id: 3, title: 'Exodus', subtitle: "Freedom, faith, and God's provision.", startDay: 22, endDay: 90, img: '/Exodus.png?v=2' },
+  { id: 4, title: 'Kingdoms', subtitle: 'A people, a king, a greater King.', startDay: 91, endDay: 180, img: '/Kingdoms.png?v=2' },
+  { id: 5, title: 'Exile', subtitle: 'Even in the darkness, He is working.', startDay: 181, endDay: 240, img: '/Exile.png?v=2' },
+  { id: 6, title: 'Jesus', subtitle: 'The fulfillment of it all.', startDay: 241, endDay: 330, img: '/Jesus.png?v=2' },
+  { id: 7, title: 'Early Church', subtitle: 'The mission continues.', startDay: 331, endDay: 365, img: '/Early%20Church.png?v=2' }
 ];
 
 // --- 17 FEATURED DIRECTIONS ---
@@ -472,6 +472,9 @@ function AppContent() {
     } catch { return []; }
   });
   const [activePlanDay, setActivePlanDay] = useState(null);
+  
+  // Track which day is currently being previewed in the Plan Tab Carousel
+  const [viewingPlanDay, setViewingPlanDay] = useState(1);
 
   const [isQuickNoteOpen, setIsQuickNoteOpen] = useState(false);
   const [quickNoteText, setQuickNoteText] = useState('');
@@ -610,8 +613,8 @@ function AppContent() {
       artist: "Human Audio Narration (KJV)",
       album: "God's Purpose System",
       artwork: [
-        { src: '/A splash.png', sizes: '512x512', type: 'image/png' },
-        { src: '/A splash.png', sizes: '192x192', type: 'image/png' }
+        { src: '/A%20splash.png?v=2', sizes: '512x512', type: 'image/png' },
+        { src: '/A%20splash.png?v=2', sizes: '192x192', type: 'image/png' }
       ]
     });
 
@@ -1233,6 +1236,13 @@ function AppContent() {
     try { localStorage.setItem('bible_reader_theme', bibleTheme); } catch (e) {}
   }, [bibleTheme]);
 
+  // Sync viewingPlanDay up to the current daily assignment
+  useEffect(() => {
+    if (currentJourneyDay?.day && !completedDays.includes(viewingPlanDay)) {
+      setViewingPlanDay(currentJourneyDay.day);
+    }
+  }, [currentJourneyDay?.day]);
+
   const handleNextChapter = async () => {
     triggerHaptic('medium');
     if (currentPlanItem && isPlanEnd) {
@@ -1254,8 +1264,14 @@ function AppContent() {
           console.warn("Cloud progress sync error:", err);
         }
       }
+      
+      // Auto-advance the plan slider to the next chronological day
+      if (activePlanDay < 365) {
+        setViewingPlanDay(activePlanDay + 1);
+      }
+
       setActivePlanDay(null);
-      setActiveTab('Home'); 
+      setActiveTab('Plan'); 
       return;
     }
     const totalChaptersInBook = booksList[currentBookIndex]?.chapters?.length || 1;
@@ -1402,17 +1418,15 @@ function AppContent() {
         {/* --- VIEW 1: HOME --- */}
         {activeTab === 'Home' && (
           <main className="flex-1 overflow-y-auto pb-32 font-sans bg-[#12161B] text-[#EDEAE4] select-none">
-            <div className="relative w-full aspect-[4/3] max-h-[310px] overflow-hidden bg-[#0D1217]">
+            <div className="relative w-full bg-[#0D1217]">
               <img 
                 src="/A%20Home-top.png?v=2" 
                 alt="Discover the Path God Has Prepared for You" 
-                className="w-full h-full object-cover object-top block"
+                className="w-full h-auto block"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#12161B] via-transparent to-transparent pointer-events-none" />
-              <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-[#12161B] to-transparent pointer-events-none" />
             </div>
 
-            <div className="px-5 -mt-3 relative z-10 space-y-4">
+            <div className="px-5 mt-3 relative z-10 space-y-4">
               <div className="flex justify-between items-start gap-3">
                 <div className="flex-1 min-w-0">
                   <p className="text-[10.5px] uppercase font-sans tracking-[0.16em] text-[#C6A87C] font-semibold">
@@ -1481,7 +1495,7 @@ function AppContent() {
 
                   <div className="w-[52px] h-[52px] rounded-full overflow-hidden bg-[#161C24] flex-shrink-0 shadow-md border border-white/5 relative">
                 <img 
-                  src={activeEra?.img || '/Creation.png'} 
+                  src={activeEra?.img ? activeEra.img + '?v=2' : '/Creation.png?v=2'} 
                   alt={activeEra?.title || 'Milestone'} 
                   className="w-full h-full object-cover object-center scale-[1.38] rounded-full"
                 />
@@ -1702,7 +1716,7 @@ function AppContent() {
                 <div className="flex items-center justify-between mb-2.5 px-1">
                   <div>
                     <h3 className="text-[13.5px] font-sans font-semibold text-white tracking-tight">
-                      Featured Directions
+                      Thought for the Journey
                     </h3>
                     <p className="text-[9.5px] text-gray-400 mt-0.5">Short devotionals for your day</p>
                   </div>
@@ -1742,7 +1756,7 @@ function AppContent() {
                           }}
                         />
 
-                      
+                        
 
                         <div className="absolute inset-x-0 bottom-0 pt-12 pb-3.5 px-3 bg-gradient-to-t from-[#0A1017] via-[#0A1017]/75 to-transparent">
                           <p className="text-[12.5px] font-serif font-medium text-white leading-tight">
@@ -1759,91 +1773,145 @@ function AppContent() {
         )}
 
         {/* --- VIEW 2: PLAN --- */}
-        {activeTab === 'Plan' && (
-          <main className="flex-1 overflow-y-auto pb-32 font-sans bg-[#12161B] text-white flex flex-col justify-between">
-            <div>
-              <div className="flex items-center justify-between px-5 pt-8 pb-3 bg-[#0D1217]">
-                <button 
-                  onClick={() => { triggerHaptic('light'); setActiveTab('Home'); }} 
-                  className="text-gray-400 hover:text-white flex items-center gap-1 text-xs"
-                >
-                  <FiChevronLeft size={18} />
-                  <span>Home</span>
-                </button>
-                <span className="font-serif text-[14px] tracking-wide text-gray-200">Bible Journal</span>
-                <div className="flex items-center gap-3 text-gray-400">
-                  <FiBell size={16} />
-                </div>
-              </div>
+        {activeTab === 'Plan' && (() => {
+          const selectedDayObj = CHRONOLOGICAL_PLAN.find(p => p.day === viewingPlanDay) || currentJourneyDay;
+          const isSelectedCompleted = completedDays.includes(viewingPlanDay);
 
-              <div className="relative w-full bg-[#12161B] border-b border-[#222B35] overflow-hidden">
-                <div className="relative w-full overflow-hidden bg-[#0D1217]">
-                  <img src="/Reading-top.png" alt="Chronological Reading" className="w-full h-auto max-h-[270px] object-contain object-top mx-auto" />
+          // Calculate exactly 5 days to show in the carousel surrounding the viewed day
+          let startIdx = viewingPlanDay - 3;
+          if (startIdx < 0) startIdx = 0;
+          if (startIdx > CHRONOLOGICAL_PLAN.length - 5) startIdx = Math.max(0, CHRONOLOGICAL_PLAN.length - 5);
+          const visibleDays = CHRONOLOGICAL_PLAN.slice(startIdx, startIdx + 5);
+
+          return (
+            <main className="flex-1 overflow-y-auto pb-20 font-sans bg-[#1E2329] text-white flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between px-5 pt-8 pb-3 bg-[#0D1217]">
+                  <button 
+                    onClick={() => { triggerHaptic('light'); setActiveTab('Home'); }} 
+                    className="text-gray-400 hover:text-white flex items-center gap-1 text-xs"
+                  >
+                    <FiChevronLeft size={18} />
+                    <span>Home</span>
+                  </button>
+                  <span className="font-serif text-[14px] tracking-wide text-gray-200">Bible Journal</span>
+                  <div className="flex items-center gap-3 text-gray-400">
+                    <FiBell size={16} />
+                  </div>
                 </div>
-                <div className="bg-[#12161B] px-5 py-2.5 flex items-center justify-between">
+
+                {/* Hero Image - Side to Side Full width (Bottom Cropped) */}
+            <div className="relative w-full h-[250px] overflow-hidden bg-[#0D1217]">
+              <img src="/Reading-top.png?v=2" alt="Chronological Reading" className="w-full h-full object-cover object-top block" />
+            </div>
+                
+                {/* Goal Progress Banner */}
+                <div className="bg-[#343941] px-5 py-3 flex items-center justify-between border-b border-[#1E2329]">
                   <div>
-                    <p className="text-[14px] font-bold text-white tracking-tight">Goal Progress:</p>
-                    <p className="text-[11px] text-gray-400 font-normal">1 for Today</p>
+                    <p className="text-[15px] font-medium text-[#9BB181] tracking-tight">Goal Progress:</p>
+                    <p className="text-[11px] text-gray-300 font-normal">1 for Today</p>
                   </div>
-                  <div className="relative w-14 h-14 bg-[#1F2732] rounded-full flex items-center justify-center border border-white/10">
-                    <span className="font-sans font-bold text-[12px] text-white">{progressPercentage}%</span>
+                  <div className="relative w-[60px] h-[60px] bg-[#3B3F46] rounded-full flex items-center justify-center border-4 border-[#25282F] shadow-sm">
+                    {/* Visual green arc indicating progress */}
+                    <div className="absolute top-0 right-0 w-full h-full rounded-full border-4 border-transparent border-t-[#89BC4F] border-r-[#89BC4F] rotate-45 pointer-events-none" />
+                    <span className="font-sans font-bold text-[18px] text-white tracking-tight">{progressPercentage}%</span>
+                  </div>
+                </div>
+
+                {/* --- 5-DAY CAROUSEL --- */}
+                <div className="flex w-full bg-[#1E2329] pt-3">
+                  {visibleDays.map((plan) => {
+                    const isDayDone = completedDays.includes(plan.day);
+                    const isSelected = plan.day === viewingPlanDay;
+                    const isCurrentNext = plan.day === currentJourneyDay.day;
+
+                    const bgClass = isDayDone ? 'bg-[#4B6836]' : 'bg-[#181D23]';
+                    const textClass = isDayDone ? 'text-white' : (isSelected ? 'text-white' : 'text-gray-400');
+                    const borderClass = isSelected ? 'border-x border-[#181D23]' : 'border-r border-[#222830]';
+
+                    return (
+                      <div
+                        key={plan.day}
+                        onClick={() => {
+                          triggerHaptic('light');
+                          setViewingPlanDay(plan.day);
+                        }}
+                        className={`flex-1 relative cursor-pointer flex flex-col items-center justify-center py-2.5 ${bgClass} ${borderClass} last:border-r-0`}
+                      >
+                        {isCurrentNext && (
+                          <div className="absolute -top-3 inset-x-0 mx-auto w-[85%] h-[14px] bg-[#6754B4] flex items-center justify-center rounded-t-[3px] shadow-sm">
+                            <span className="text-[7px] font-bold text-white uppercase tracking-widest">Next</span>
+                          </div>
+                        )}
+                        <span className={`text-[19px] font-bold leading-none mt-1 ${textClass}`}>
+                          {plan.day}
+                        </span>
+                        <span className={`text-[8px] font-sans mt-1.5 truncate w-full px-0.5 text-center ${isDayDone ? 'text-[#C5DDA8]' : 'text-gray-500'}`}>
+                          {plan.startBook.slice(0, 3)} {plan.startChapter}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Reading Passage Breakdown Box */}
+                <div className="px-5 py-2 space-y-0 bg-[#1E2329]">
+                  <div 
+                    onClick={() => {
+                      triggerHaptic('medium');
+                      const isDone = completedDays.includes(viewingPlanDay);
+                      let updated = isDone ? completedDays.filter(d => d !== viewingPlanDay) : [...completedDays, viewingPlanDay];
+                      setCompletedDays(updated);
+                      localStorage.setItem('bible_completed_days', JSON.stringify(updated));
+                    }}
+                    className="flex items-center justify-between py-4 border-b border-[#2C333B] cursor-pointer hover:bg-white/5 transition-all"
+                  >
+                    <div className="flex-1 pr-3">
+                      <p className="text-[14px] font-medium text-white tracking-wide">
+                        {selectedDayObj.startBook} {selectedDayObj.startChapter}
+                        {selectedDayObj.endChapter && selectedDayObj.endChapter !== selectedDayObj.startChapter ? `–${selectedDayObj.endChapter}` : ''}
+                      </p>
+                    </div>
+                    <div className={`w-5 h-5 rounded-full flex items-center justify-center transition-all ${isSelectedCompleted ? 'bg-white' : 'bg-white'}`}>
+                       <div className={`w-2.5 h-2.5 rounded-full ${isSelectedCompleted ? 'bg-[#89BC4F]' : 'bg-transparent'}`} />
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <div className="px-5 py-4 space-y-3">
-                <div 
+              {/* Bottom Action Button */}
+              <div className="px-5 pt-4 pb-8">
+                <button
                   onClick={() => {
                     triggerHaptic('medium');
-                    const isDone = completedDays.includes(currentJourneyDay.day);
-                    let updated = isDone ? completedDays.filter(d => d !== currentJourneyDay.day) : [...completedDays, currentJourneyDay.day];
-                    setCompletedDays(updated);
-                    localStorage.setItem('bible_completed_days', JSON.stringify(updated));
+                    setCurrentBook(selectedDayObj.startBook);
+                    setCurrentChapter(selectedDayObj.startChapter);
+                    setCurrentVerse(1);
+                    setActivePlanDay(selectedDayObj.day);
+                    setActiveTab('Bible');
                   }}
-                  className="flex items-center justify-between p-3.5 rounded-xl bg-[#161C24]/80 border border-[#26313E] cursor-pointer"
+                  className="w-full py-2.5 bg-[#C6A87C] hover:brightness-105 text-[#14202E] font-bold text-[13.5px] rounded-[10px] shadow-sm tracking-wide font-sans active:scale-[0.98] transition-all"
                 >
-                  <div className="flex-1 pr-3">
-                    <p className="text-[15px] font-medium text-white tracking-tight">{currentJourneyDay.startBook} {currentJourneyDay.startChapter}</p>
-                    <p className="text-[11px] text-gray-400 mt-0.5">Assigned Daily Reading</p>
-                  </div>
-                  <div className={`w-6 h-6 rounded-full flex items-center justify-center border ${completedDays.includes(currentJourneyDay.day) ? 'bg-[#C6A87C] border-[#C6A87C]' : 'bg-white border-white'}`}>
-                    {completedDays.includes(currentJourneyDay.day) && <FiCheck size={14} className="text-[#14202E] stroke-[3]" />}
-                  </div>
-                </div>
+                  Read Day {viewingPlanDay}
+                </button>
               </div>
-            </div>
-
-            <div className="px-5 py-3">
-              <button
-                onClick={() => {
-                  triggerHaptic('medium');
-                  setCurrentBook(currentJourneyDay.startBook);
-                  setCurrentChapter(currentJourneyDay.startChapter);
-                  setCurrentVerse(1);
-                  setActivePlanDay(currentJourneyDay.day);
-                  setActiveTab('Bible');
-                }}
-                className="w-full py-2.5 bg-[#C6A87C] text-[#14202E] font-bold text-[13.5px] rounded-lg shadow-md tracking-wide font-sans"
-              >
-                Read Day {currentJourneyDay.day}
-              </button>
-            </div>
-          </main>
-        )}
+            </main>
+          );
+        })()}
 
         {/* --- VIEW 3: JOURNEY --- */}
         {activeTab === 'Journey' && (
           <main className="flex-1 overflow-y-auto pb-32 font-sans bg-[#12161B] text-[#EDEAE4]">
-            <div className="relative w-full h-56 overflow-hidden bg-[#0D1217] border-b border-[#222B35]">
-              <img 
-                src="/A Journey-top.png" 
-                alt="The Journey - From Genesis to Revelation" 
-                className="w-full h-full object-cover object-center block"
-              />
-              <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-[#12161B] to-transparent pointer-events-none" />
-            </div>
+            <div className="relative w-full h-[270px] overflow-hidden bg-[#0D1217] border-b border-[#222B35]">
+          <img 
+            src="/A%20Journey-top.png?v=2" 
+            alt="The Journey - From Genesis to Revelation" 
+            className="w-full h-full object-cover object-top block"
+          />
+          <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#12161B] to-transparent pointer-events-none" />
+        </div>
 
-            <div className="px-4 relative z-20 -mt-6 mb-4">
+            <div className="px-4 mt-3 relative z-20 mb-4">
               <div className="backdrop-blur-md rounded-2xl py-3 px-4 shadow-xl border flex items-center justify-between bg-[#161C24]/90 border-[#26313E]">
                 <div className="flex-1 pr-3">
                   <p className="font-bold text-[14px] leading-none mb-1 text-white">{completedDays.length} of 365</p>
@@ -2098,9 +2166,9 @@ function AppContent() {
         {/* --- VIEW 4: BIBLE READER --- */}
         {activeTab === 'Bible' && (
           <main ref={bibleContainerRef} className={`flex-1 overflow-y-auto pb-32 ${isBibleDark ? 'bg-[#0E1622] text-[#EDEAE4]' : 'bg-[#FBF9F5] text-[#1C2A39]'}`}>
-            <div className="relative w-full h-56 overflow-hidden bg-[#0B1017] border-b border-[#222B35]/70">
-              <img src="/A Bible-top.png" alt="Scripture" className="w-full h-full object-cover object-center block" />
-            </div>
+            <div className="relative w-full h-[250px] overflow-hidden bg-[#0B1017] border-b border-[#222B35]/70">
+          <img src="/A%20Bible-top.png?v=2" alt="Scripture" className="w-full h-full object-cover object-top block" />
+        </div>
 
             {isSearchOpen && (
               <div className="px-4 pt-3 pb-1 bg-[#121A24] border-b border-[#222B35] shadow-md transition-all">
@@ -2364,9 +2432,8 @@ function AppContent() {
         {/* --- VIEW 6: PROFILE --- */}
         {activeTab === 'Profile' && (
           <main className="flex-1 overflow-y-auto pb-32 bg-[#FBF9F5] text-[#1C2A39]">
-            <div className="relative w-full h-56 overflow-hidden bg-[#FAF7F2] border-b border-[#ECE5D8]">
-              <img src="/A Profile-top.png" alt="Your Journey" className="w-full h-full object-cover object-center block" />
-              <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-[#FBF9F5] to-transparent pointer-events-none" />
+            <div className="relative w-full bg-[#FAF7F2] border-b border-[#ECE5D8]">
+              <img src="/A%20Profile-top.png?v=2" alt="Your Journey" className="w-full h-auto block" />
             </div>
             
             <div className="px-4 py-4 space-y-4">
@@ -2640,7 +2707,7 @@ function AppContent() {
               <div className="p-6 overflow-y-auto flex-1 space-y-4">
                 <div>
                   <span className="text-[10px] font-sans uppercase tracking-[0.2em] font-bold text-[#C6A87C]">
-                    Featured Direction
+                    Thought for the Journey
                   </span>
                   <h2 className="text-2xl font-serif text-white font-normal mt-0.5">
                     {selectedDirection.title}
