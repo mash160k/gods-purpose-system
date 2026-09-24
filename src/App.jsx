@@ -1413,20 +1413,22 @@ function AppContent() {
         />
       )}
 
-      <div className="w-full max-w-[430px] h-[100dvh] bg-[#1C2A39] relative overflow-hidden shadow-2xl flex flex-col md:border-x md:border-gray-800">
+      <div className="w-full max-w-[430px] h-[100dvh] min-h-[100dvh] bg-[#1C2A39] relative overflow-hidden shadow-2xl flex flex-col md:border-x md:border-gray-800">
         
         {/* --- VIEW 1: HOME --- */}
         {activeTab === 'Home' && (
           <main className="flex-1 overflow-y-auto pb-32 font-sans bg-[#12161B] text-[#EDEAE4] select-none">
-            <div className="relative w-full bg-[#0D1217]">
+            <div className="relative w-full aspect-[4/3] max-h-[310px] overflow-hidden bg-[#0D1217]">
               <img 
                 src="/A%20Home-top.png?v=2" 
                 alt="Discover the Path God Has Prepared for You" 
-                className="w-full h-auto block"
+                className="w-full h-full object-cover object-top block"
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#12161B] via-transparent to-transparent pointer-events-none" />
+              <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-[#12161B] to-transparent pointer-events-none" />
             </div>
 
-            <div className="px-5 mt-3 relative z-10 space-y-4">
+            <div className="px-5 -mt-3 relative z-10 space-y-4">
               <div className="flex justify-between items-start gap-3">
                 <div className="flex-1 min-w-0">
                   <p className="text-[10.5px] uppercase font-sans tracking-[0.16em] text-[#C6A87C] font-semibold">
