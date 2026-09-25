@@ -50,9 +50,17 @@ const BIBLE_HUMAN_SLUGS = {
 };
 
 function getHumanAudioUrl(bookName, chapter) {
+  // Hardcode the known, working path specifically for Song of Solomon
+  if (bookName === "Song of Solomon") {
+    const ch = String(chapter || 1).padStart(2, "0");
+    return `https://www.audiotreasure.com/mp3/22_Song_of_Solomon/Song_of_Solomon_${ch}.mp3`;
+  }
+
+  // The rest of the Bible uses the standard KJV_AT 3-digit format
   const slug = BIBLE_HUMAN_SLUGS[bookName] || "01_Genesis";
-  const ch = String(chapter || 1).padStart(2, "0");
-  return `https://www.audiotreasure.com/content/KJV_FF/${slug}_${ch}.mp3`;
+  const ch = String(chapter || 1).padStart(3, "0");
+  
+  return `https://www.audiotreasure.com/content/KJV_AT/${slug}${ch}.mp3`;
 }
 
 const AUDIO_CACHE_NAME = 'gps-bible-audio-v1';
@@ -227,6 +235,42 @@ const JOURNEY_ERAS = [
   { id: 7, title: 'Early Church', subtitle: 'The mission continues.', startDay: 331, endDay: 365, img: '/Early%20Church.png?v=2' }
 ];
 
+// --- SACRED WORDS CARDS ---
+const SACRED_WORDS_CARDS = [
+  {
+    id: 'psalms',
+    title: 'Psalms',
+    cardImage: '/Card-psalms.png',
+    pageImage: '/Page-psalms.png',
+    book: 'Psalms',
+    chapter: 1
+  },
+  {
+    id: 'proverbs',
+    title: 'Proverbs',
+    cardImage: '/Card-proverbs.png',
+    pageImage: '/Page-proverbs.png',
+    book: 'Proverbs',
+    chapter: 1
+  },
+  {
+    id: 'sos',
+    title: 'Song of Solomon',
+    cardImage: '/Card-sos.png',
+    pageImage: '/Page-sos.png',
+    book: 'Song of Solomon',
+    chapter: 1
+  },
+  {
+    id: 'beatitudes',
+    title: 'Beatitudes',
+    cardImage: '/Card-beatitides.png', // Maintained exact spelling from request
+    pageImage: '/Page-beatitudes.png',
+    book: 'Matthew',
+    chapter: 5
+  }
+];
+
 // --- 17 FEATURED DIRECTIONS ---
 const FEATURED_DIRECTIONS = [
   {
@@ -382,7 +426,9 @@ function AppContent() {
   const [isLoading, setIsLoading] = useState(true);
 
   const [selectedDirection, setSelectedDirection] = useState(null);
+  const [activeSpecialCard, setActiveSpecialCard] = useState(null);
   const bibleContainerRef = useRef(null);
+  const homeContainerRef = useRef(null);
 
   // --- AUDIO CONTROLLER STATE ---
   const audioRef = useRef(new Audio());
@@ -485,6 +531,33 @@ function AppContent() {
       return saved ? JSON.parse(saved) : [];
     } catch { return []; }
   });
+
+  // --- INSTALL APP DETECTION ---
+  const [isStandalone, setIsStandalone] = useState(true);
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [isIOS, setIsIOS] = useState(false);
+  const [showInstallCard, setShowInstallCard] = useState(() => {
+    try { return localStorage.getItem('gps_hide_install') !== 'true'; } catch { return true; }
+  });
+  const [isInstallModalOpen, setIsInstallModalOpen] = useState(false);
+
+  useEffect(() => {
+    // Check if app is already installed to home screen
+    const standalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+    setIsStandalone(standalone);
+
+    // Detect if user is on iOS
+    const ios = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    setIsIOS(ios);
+
+    // Capture Android install prompt
+    const handleBIP = (e) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+    window.addEventListener('beforeinstallprompt', handleBIP);
+    return () => window.removeEventListener('beforeinstallprompt', handleBIP);
+  }, []);
 
   const handleAutoAdvance = () => {
     if (sleepTimerOption === 'chapter') {
@@ -867,6 +940,14 @@ function AppContent() {
   };
 
   useEffect(() => {
+    // Reset scroll when switching tabs
+    window.scrollTo(0, 0);
+    if (homeContainerRef.current) {
+      homeContainerRef.current.scrollTo(0, 0);
+    }
+  }, [activeTab]);
+
+  useEffect(() => {
     if (bibleContainerRef.current) {
       bibleContainerRef.current.scrollTo({ top: 0, behavior: 'instant' });
     }
@@ -1238,7 +1319,7 @@ function AppContent() {
 
   // Sync viewingPlanDay up to the current daily assignment
   useEffect(() => {
-    if (currentJourneyDay?.day && !completedDays.includes(viewingPlanDay)) {
+    if (currentJourneyDay?.day) {
       setViewingPlanDay(currentJourneyDay.day);
     }
   }, [currentJourneyDay?.day]);
@@ -1413,22 +1494,23 @@ function AppContent() {
         />
       )}
 
-      <div className="w-full max-w-[430px] h-[100dvh] min-h-[100dvh] bg-[#1C2A39] relative overflow-hidden shadow-2xl flex flex-col md:border-x md:border-gray-800">
+      <div className="w-full max-w-[430px] h-[100dvh] bg-[#1C2A39] relative overflow-hidden shadow-2xl flex flex-col md:border-x md:border-gray-800">
         
         {/* --- VIEW 1: HOME --- */}
         {activeTab === 'Home' && (
-          <main className="flex-1 overflow-y-auto pb-32 font-sans bg-[#12161B] text-[#EDEAE4] select-none">
-            <div className="relative w-full aspect-[4/3] max-h-[310px] overflow-hidden bg-[#0D1217]">
+          <main ref={homeContainerRef} className="flex-1 overflow-y-auto pb-32 font-sans bg-[#12161B] text-[#EDEAE4] select-none">
+            <div className="relative w-full bg-[#0D1217]">
               <img 
                 src="/A%20Home-top.png?v=2" 
                 alt="Discover the Path God Has Prepared for You" 
-                className="w-full h-full object-cover object-top block"
+                fetchPriority="high"
+                loading="eager"
+                decoding="sync"
+                className="w-full h-auto block"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#12161B] via-transparent to-transparent pointer-events-none" />
-              <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-[#12161B] to-transparent pointer-events-none" />
             </div>
 
-            <div className="px-5 -mt-3 relative z-10 space-y-4">
+            <div className="px-5 mt-3 relative z-10 space-y-4">
               <div className="flex justify-between items-start gap-3">
                 <div className="flex-1 min-w-0">
                   <p className="text-[10.5px] uppercase font-sans tracking-[0.16em] text-[#C6A87C] font-semibold">
@@ -1547,7 +1629,7 @@ function AppContent() {
                     <button
                       onClick={() => {
                         triggerHaptic('light');
-                        setActivePlanDay(currentJourneyDay.day);
+                        setViewingPlanDay(currentJourneyDay.day);
                         setActiveTab('Plan');
                       }}
                       className="w-full bg-emerald-700/80 text-white font-sans font-bold text-[12px] py-2 px-4 rounded-[13px] flex items-center justify-center gap-1.5 border border-emerald-500/40"
@@ -1568,7 +1650,7 @@ function AppContent() {
                   <button
                     onClick={() => {
                       triggerHaptic('medium');
-                      setActivePlanDay(currentJourneyDay.day);
+                      setViewingPlanDay(currentJourneyDay.day);
                       setActiveTab('Plan');
                     }}
                     className="w-full mt-1.5 bg-[#C6A87C] hover:brightness-105 active:scale-[0.98] text-[#14202E] font-sans font-bold text-[12.5px] py-2.5 px-4 rounded-[14px] transition-all flex items-center justify-center tracking-tight shadow-md"
@@ -1577,6 +1659,48 @@ function AppContent() {
                   </button>
                 )}
               </div>
+
+              {!isStandalone && showInstallCard && (
+                <div 
+                  className="relative bg-[#161C24] border border-[#C6A87C]/30 rounded-2xl p-3.5 shadow-lg flex items-center justify-between cursor-pointer active:scale-[0.98] transition-all"
+                  onClick={() => {
+                    triggerHaptic('medium');
+                    if (!isIOS && deferredPrompt) {
+                      deferredPrompt.prompt();
+                      deferredPrompt.userChoice.then((choice) => {
+                        if (choice.outcome === 'accepted') setShowInstallCard(false);
+                      });
+                    } else {
+                      setIsInstallModalOpen(true);
+                    }
+                  }}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-[#C6A87C]/10 text-[#C6A87C] flex items-center justify-center flex-shrink-0">
+                      <FiDownloadCloud size={18} />
+                    </div>
+                    <div>
+                      <p className="text-[13.5px] font-sans font-bold text-white leading-tight">Install the App</p>
+                      <p className="text-[10px] text-gray-400 mt-0.5">Add to home screen for offline access</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center">
+                    <FiChevronRight size={18} className="text-gray-500 mr-2" />
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        triggerHaptic('light');
+                        setShowInstallCard(false);
+                        localStorage.setItem('gps_hide_install', 'true');
+                      }}
+                      className="p-2 -mr-2 text-gray-500 hover:text-white"
+                    >
+                      <FiX size={14} />
+                    </button>
+                  </div>
+                </div>
+              )}
 
               {!hasProfile && (
                 <div 
@@ -1714,6 +1838,31 @@ function AppContent() {
                 </div>
               </div>
 
+              {/* --- NEW SACRED WORDS SECTION --- */}
+              <div className="pt-2 pb-1">
+                <h3 className="text-[13.5px] font-sans font-semibold text-white tracking-tight mb-2.5 px-1">
+                  Scripture Focus
+                </h3>
+                <div className="grid grid-cols-2 gap-3 px-1">
+                  {SACRED_WORDS_CARDS.map(card => (
+                    <div 
+                      key={card.id} 
+                      onClick={() => {
+                        triggerHaptic('light');
+                        setActiveSpecialCard(card);
+                      }}
+                      className="cursor-pointer active:scale-95 transition-transform"
+                    >
+                      <img 
+                        src={card.cardImage} 
+                        alt={card.title} 
+                        className="w-full h-auto rounded-[20px] shadow-lg border border-white/5 object-cover" 
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
               <div className="pt-1">
                 <div className="flex items-center justify-between mb-2.5 px-1">
                   <div>
@@ -1803,20 +1952,38 @@ function AppContent() {
                 </div>
 
                 {/* Hero Image - Side to Side Full width (Bottom Cropped) */}
-            <div className="relative w-full h-[250px] overflow-hidden bg-[#0D1217]">
-              <img src="/Reading-top.png?v=2" alt="Chronological Reading" className="w-full h-full object-cover object-top block" />
-            </div>
+                <div className="relative w-full h-[250px] overflow-hidden bg-[#0D1217]">
+                  <img src="/Reading-top.png?v=2" alt="Chronological Reading" className="w-full h-full object-cover object-top block" />
+                </div>
                 
                 {/* Goal Progress Banner */}
                 <div className="bg-[#343941] px-5 py-3 flex items-center justify-between border-b border-[#1E2329]">
                   <div>
-                    <p className="text-[15px] font-medium text-[#9BB181] tracking-tight">Goal Progress:</p>
-                    <p className="text-[11px] text-gray-300 font-normal">1 for Today</p>
+                    <p className="text-[15px] font-medium text-[#9BB181] tracking-tight">Journey Progress</p>
+                    <p className="text-[11px] text-gray-300 font-normal">{completedDays.length} of 365 Days Completed</p>
                   </div>
-                  <div className="relative w-[60px] h-[60px] bg-[#3B3F46] rounded-full flex items-center justify-center border-4 border-[#25282F] shadow-sm">
-                    {/* Visual green arc indicating progress */}
-                    <div className="absolute top-0 right-0 w-full h-full rounded-full border-4 border-transparent border-t-[#89BC4F] border-r-[#89BC4F] rotate-45 pointer-events-none" />
-                    <span className="font-sans font-bold text-[18px] text-white tracking-tight">{progressPercentage}%</span>
+                  <div className="relative w-[60px] h-[60px] bg-[#3B3F46] rounded-full flex items-center justify-center shadow-sm">
+                    {/* Dynamic SVG Progress Ring */}
+                    <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 60 60">
+                      {/* Background track */}
+                      <circle cx="30" cy="30" r="26" fill="transparent" stroke="#25282F" strokeWidth="5" />
+                      {/* Dynamic fill track */}
+                      <circle
+                        cx="30"
+                        cy="30"
+                        r="26"
+                        fill="transparent"
+                        stroke="#89BC4F"
+                        strokeWidth="5"
+                        strokeDasharray={163.36}
+                        strokeDashoffset={163.36 - (progressPercentage / 100) * 163.36}
+                        strokeLinecap="round"
+                        className="transition-all duration-1000 ease-out"
+                      />
+                    </svg>
+                    <span className="font-sans font-bold text-[15px] text-white tracking-tight z-10">
+                      {progressPercentage}%
+                    </span>
                   </div>
                 </div>
 
@@ -1904,16 +2071,16 @@ function AppContent() {
         {/* --- VIEW 3: JOURNEY --- */}
         {activeTab === 'Journey' && (
           <main className="flex-1 overflow-y-auto pb-32 font-sans bg-[#12161B] text-[#EDEAE4]">
-            <div className="relative w-full h-[270px] overflow-hidden bg-[#0D1217] border-b border-[#222B35]">
-          <img 
-            src="/A%20Journey-top.png?v=2" 
-            alt="The Journey - From Genesis to Revelation" 
-            className="w-full h-full object-cover object-top block"
-          />
-          <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#12161B] to-transparent pointer-events-none" />
-        </div>
+            <div className="relative w-full h-[250px] overflow-hidden bg-[#0D1217] border-b border-[#222B35]">
+              <img 
+                src="/A%20Journey-top.png?v=2" 
+                alt="The Journey - From Genesis to Revelation" 
+                className="w-full h-full object-cover object-top block"
+              />
+              <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-[#12161B] to-transparent pointer-events-none" />
+            </div>
 
-            <div className="px-4 mt-3 relative z-20 mb-4">
+            <div className="px-4 relative z-20 -mt-6 mb-4">
               <div className="backdrop-blur-md rounded-2xl py-3 px-4 shadow-xl border flex items-center justify-between bg-[#161C24]/90 border-[#26313E]">
                 <div className="flex-1 pr-3">
                   <p className="font-bold text-[14px] leading-none mb-1 text-white">{completedDays.length} of 365</p>
@@ -2169,8 +2336,8 @@ function AppContent() {
         {activeTab === 'Bible' && (
           <main ref={bibleContainerRef} className={`flex-1 overflow-y-auto pb-32 ${isBibleDark ? 'bg-[#0E1622] text-[#EDEAE4]' : 'bg-[#FBF9F5] text-[#1C2A39]'}`}>
             <div className="relative w-full h-[250px] overflow-hidden bg-[#0B1017] border-b border-[#222B35]/70">
-          <img src="/A%20Bible-top.png?v=2" alt="Scripture" className="w-full h-full object-cover object-top block" />
-        </div>
+              <img src="/A%20Bible-top.png?v=2" alt="Scripture" className="w-full h-full object-cover object-top block" />
+            </div>
 
             {isSearchOpen && (
               <div className="px-4 pt-3 pb-1 bg-[#121A24] border-b border-[#222B35] shadow-md transition-all">
@@ -2590,6 +2757,7 @@ function AppContent() {
                 key={tab.id}
                 onClick={() => {
                   triggerHaptic('light');
+                  if (tab.id === 'Plan') setViewingPlanDay(currentJourneyDay?.day || 1);
                   setActiveTab(tab.id);
                 }} 
                 className={`relative flex flex-col items-center justify-center p-1.5 border-none outline-none focus:outline-none focus:ring-0 bg-transparent transition-all ${
@@ -2675,6 +2843,58 @@ function AppContent() {
             </div>
           </div>
         )}
+
+        {/* --- NEW SACRED WORDS MODAL --- */}
+        {activeSpecialCard && (() => {
+          const isThisCardPlaying = isAudioPlaying && currentAudioTrack?.book === activeSpecialCard.book && currentAudioTrack?.chapter === activeSpecialCard.chapter;
+          
+          return (
+            <div className="absolute inset-0 z-[70] flex flex-col bg-black animate-in fade-in duration-200">
+              <div className="relative w-full h-full flex flex-col items-center justify-center">
+                
+                <img 
+                  src={activeSpecialCard.pageImage} 
+                  alt={activeSpecialCard.title} 
+                  className="absolute inset-0 w-full h-full object-cover" 
+                />
+                
+                <button
+                  onClick={() => {
+                    triggerHaptic('light');
+                    setActiveSpecialCard(null);
+                  }}
+                  className="absolute top-6 right-5 w-8 h-8 rounded-full bg-black/40 backdrop-blur-md text-white flex items-center justify-center hover:bg-black/60 active:scale-95 transition-all shadow-lg z-10"
+                >
+                  <FiX size={18} />
+                </button>
+
+                {/* Elevated to 55% to clear the text block */}
+                <div className="absolute top-[55%] left-1/2 -translate-x-1/2 z-10">
+                  <button 
+                    onClick={() => {
+                      triggerHaptic('medium');
+                      // Quietly sync the app's internal state so the audio engine doesn't drop the track
+                      if (!isThisCardPlaying) {
+                        setCurrentBook(activeSpecialCard.book);
+                        setCurrentChapter(activeSpecialCard.chapter);
+                        setCurrentVerse(1);
+                      }
+                      handleToggleAudio(activeSpecialCard.book, activeSpecialCard.chapter);
+                    }}
+                    className="bg-black/85 backdrop-blur-md border border-white/15 text-white font-normal text-[13.5px] py-2 px-5 rounded-full shadow-2xl flex items-center justify-center gap-2.5 active:scale-95 transition-all whitespace-nowrap"
+                  >
+                    {isThisCardPlaying ? (
+                      <FaPause size={11} className="text-[#C6A87C]" />
+                    ) : (
+                      <FaPlay size={11} className="ml-0.5 text-[#C6A87C]" />
+                    )}
+                    <span>Listen to {activeSpecialCard.title === 'Beatitudes' ? 'The Beatitudes' : `The ${activeSpecialCard.title}`}</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          );
+        })()}
 
         {/* --- FEATURED DIRECTION DEVOTIONAL MODAL --- */}
         {selectedDirection && (
@@ -2916,6 +3136,77 @@ function AppContent() {
                   Save Changes
                 </button>
               </form>
+            </div>
+          </div>
+        )}
+
+        {/* --- INSTALL INSTRUCTIONS MODAL --- */}
+        {isInstallModalOpen && (
+          <div className="absolute inset-0 z-[60] flex flex-col justify-end bg-black/80 backdrop-blur-sm">
+            <div className="bg-[#161C24] text-white w-full rounded-t-[2.2rem] p-6 border-t border-[#26313E] shadow-2xl space-y-4">
+              <div className="flex justify-between items-center border-b border-white/10 pb-3">
+                <h3 className="text-sm font-sans font-bold text-white flex items-center gap-2">
+                  <FiDownloadCloud className="text-[#C6A87C]" size={16} /> Install App
+                </h3>
+                <button onClick={() => setIsInstallModalOpen(false)} className="text-gray-400 hover:text-white p-1">
+                  <FiX size={18} />
+                </button>
+              </div>
+
+              <div className="py-2 space-y-4">
+                {isIOS ? (
+                  <>
+                    <p className="text-[13px] font-serif text-gray-200 leading-relaxed">
+                      Apple requires a few taps to install apps from the browser. Here is how to do it:
+                    </p>
+                    <ol className="space-y-4 text-[12px] font-sans text-gray-300 mt-2">
+                      <li className="flex items-start gap-3">
+                        <span className="w-6 h-6 rounded-full bg-[#C6A87C]/10 border border-[#C6A87C]/30 text-[#C6A87C] flex items-center justify-center font-bold flex-shrink-0 mt-0.5">1</span>
+                        <span>Tap the <strong className="text-white">Share</strong> button <span className="inline-flex bg-white/10 p-1 rounded align-middle mx-0.5"><FiShare className="text-[#C6A87C]" size={12} /></span> at the bottom of Safari.</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="w-6 h-6 rounded-full bg-[#C6A87C]/10 border border-[#C6A87C]/30 text-[#C6A87C] flex items-center justify-center font-bold flex-shrink-0 mt-0.5">2</span>
+                        <span>Scroll down the menu and tap <strong className="text-white">Add to Home Screen</strong>.</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="w-6 h-6 rounded-full bg-[#C6A87C]/10 border border-[#C6A87C]/30 text-[#C6A87C] flex items-center justify-center font-bold flex-shrink-0 mt-0.5">3</span>
+                        <span>Confirm by tapping <strong className="text-white">Add</strong> in the top right corner.</span>
+                      </li>
+                    </ol>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-[13px] font-serif text-gray-200 leading-relaxed">
+                      Install God's Purpose System to your home screen for fast, offline access.
+                    </p>
+                    <button 
+                      onClick={async () => {
+                        triggerHaptic('medium');
+                        if (deferredPrompt) {
+                          deferredPrompt.prompt();
+                          const { outcome } = await deferredPrompt.userChoice;
+                          if (outcome === 'accepted') {
+                            setShowInstallCard(false);
+                            setIsInstallModalOpen(false);
+                          }
+                        } else {
+                          alert("To install, tap your browser menu (⋮) and select 'Add to Home screen'.");
+                        }
+                      }}
+                      className="w-full mt-2 bg-[#C6A87C] text-[#14202E] font-bold text-[12px] py-3 rounded-xl shadow-md uppercase tracking-wider"
+                    >
+                      Install to Home Screen
+                    </button>
+                  </>
+                )}
+              </div>
+
+              <button
+                onClick={() => setIsInstallModalOpen(false)}
+                className="w-full py-2.5 bg-white/5 text-gray-300 font-bold text-xs rounded-xl hover:bg-white/10 mt-2"
+              >
+                Close
+              </button>
             </div>
           </div>
         )}
