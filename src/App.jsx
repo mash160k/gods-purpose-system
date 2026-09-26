@@ -8,7 +8,8 @@ import {
   FiList, FiX, FiChevronLeft, FiShare, FiCheck, 
   FiBell, FiMap, FiEdit2, FiUser, FiChevronRight, FiClock, 
   FiHeadphones, FiSun, FiMoon, FiRotateCcw, FiRotateCw, 
-  FiDownloadCloud, FiShare2, FiEdit3, FiLogIn
+  FiDownloadCloud, FiShare2, FiEdit3, FiLogIn,
+  FiSkipBack, FiSkipForward
 } from 'react-icons/fi';
 import { FaPlay, FaPause, FaSpinner } from 'react-icons/fa';
 
@@ -235,39 +236,83 @@ const JOURNEY_ERAS = [
   { id: 7, title: 'Early Church', subtitle: 'The mission continues.', startDay: 331, endDay: 365, img: '/Early%20Church.png?v=2' }
 ];
 
-// --- SACRED WORDS CARDS ---
+// --- SACRED WORDS CARDS WITH PLAYLIST DATA ---
 const SACRED_WORDS_CARDS = [
+  {
+    id: 'peace',
+    title: 'Peace & Comfort',
+    cardImage: '/Card-peace.png',
+    bgColor: 'from-[#E4DCCB] to-[#FDFBF7]', // Light tan to cream
+    textColor: 'text-[#1C2A39]', 
+    descColor: 'text-[#3A4A5B]', 
+    description: 'Scripture selected to bring peace, reassurance, and trust in God. Let these sacred words quiet your heart.',
+    playlist: [
+      { book: 'Psalms', chapter: 23, label: 'Psalm 23' },
+      { book: 'Psalms', chapter: 46, label: 'Psalm 46' },
+      { book: 'Isaiah', chapter: 41, label: 'Isaiah 41:1–13' },
+      { book: 'Matthew', chapter: 6, label: 'Matthew 6:25–34' },
+      { book: 'John', chapter: 14, label: 'John 14:1–27' },
+      { book: 'Philippians', chapter: 4, label: 'Philippians 4:4–9' }
+    ]
+  },
+  {
+    id: 'faith',
+    title: 'Faith Over Fear',
+    cardImage: '/Card-faith.png',
+    bgColor: 'from-[#110C09] to-[#33261D]', // Darkest charcoal on top, lighter warm shadow on bottom
+    textColor: 'text-white', 
+    descColor: 'text-white/95', 
+    description: 'Listen to Scripture that reminds you that God is near, faithful, and greater than whatever you face. Let these words strengthen your faith, quiet your fear, and give you courage for the road ahead.',
+    playlist: [
+      { book: 'Psalms', chapter: 27, label: 'Psalm 27' },
+      { book: 'Psalms', chapter: 56, label: 'Psalm 56' },
+      { book: 'Isaiah', chapter: 41, label: 'Isaiah 41:8–13' },
+      { book: 'Joshua', chapter: 1, label: 'Joshua 1:5–9' },
+      { book: 'Matthew', chapter: 6, label: 'Matthew 6:25–34' },
+      { book: 'Mark', chapter: 4, label: 'Mark 4:35–41' },
+      { book: 'John', chapter: 14, label: 'John 14:1–7' },
+      { book: 'Romans', chapter: 8, label: 'Romans 8:31–39' }
+    ]
+  },
   {
     id: 'psalms',
     title: 'Psalms',
     cardImage: '/Card-psalms.png',
-    pageImage: '/Page-psalms.png',
-    book: 'Psalms',
-    chapter: 1
+    bgColor: 'from-[#E6DFBF] to-[#F7F5EB]', // Warm sunlit stone to soft cream
+    textColor: 'text-[#1C2A39]', 
+    descColor: 'text-[#3A4A5B]', 
+    description: 'Listen to the Psalms—timeless songs of worship, comfort, hope, and trust. Let these sacred words draw you closer to God.',
+    playlist: [{ book: 'Psalms', chapter: 1, label: 'Psalm 1' }]
   },
   {
     id: 'proverbs',
     title: 'Proverbs',
     cardImage: '/Card-proverbs.png',
-    pageImage: '/Page-proverbs.png',
-    book: 'Proverbs',
-    chapter: 1
+    bgColor: 'from-[#E8E2C4] to-[#F8F9F3]', // Sunlit olive gold to soft cream
+    textColor: 'text-[#1C2A39]', 
+    descColor: 'text-[#3A4A5B]', 
+    description: 'Listen to the Proverbs—timeless words of wisdom, guidance, truth, and insight. Let these sacred words shape your heart.',
+    playlist: [{ book: 'Proverbs', chapter: 1, label: 'Proverbs 1' }]
   },
   {
     id: 'sos',
     title: 'Song of Solomon',
     cardImage: '/Card-sos.png',
-    pageImage: '/Page-sos.png',
-    book: 'Song of Solomon',
-    chapter: 1
+    bgColor: 'from-[#F0DADA] to-[#FDF8F8]', // Soft blush pink to warm cream
+    textColor: 'text-[#1C2A39]', 
+    descColor: 'text-[#3A4A5B]', 
+    description: 'Listen to the Song of Solomon—timeless words of love, beauty, devotion, and longing. Let these sacred words deepen your love.',
+    playlist: [{ book: 'Song of Solomon', chapter: 1, label: 'Song of Solomon 1' }]
   },
   {
     id: 'beatitudes',
     title: 'Beatitudes',
-    cardImage: '/Card-beatitides.png', // Maintained exact spelling from request
-    pageImage: '/Page-beatitudes.png',
-    book: 'Matthew',
-    chapter: 5
+    cardImage: '/Card-beatitides.png',
+    bgColor: 'from-[#F3E5C8] to-[#FDFBF7]', // Soft sunrise gold to warm cream
+    textColor: 'text-[#1C2A39]', 
+    descColor: 'text-[#3A4A5B]', 
+    description: 'Listen to the Beatitudes—timeless blessings of grace, humility, mercy, and peace. Let these sacred words lift your spirit.',
+    playlist: [{ book: 'Matthew', chapter: 5, label: 'Matthew 5' }]
   }
 ];
 
@@ -442,6 +487,10 @@ function AppContent() {
   const [sleepTimerOption, setSleepTimerOption] = useState(null); 
   const sleepTimerRef = useRef(null);
 
+  // --- PLAYLIST STATE ---
+  const [activePlaylist, setActivePlaylist] = useState(null);
+  const [activePlaylistIndex, setActivePlaylistIndex] = useState(0);
+
   const [activeVerseDrawer, setActiveVerseDrawer] = useState(null);
   const [verseHighlights, setVerseHighlights] = useState(() => {
     try {
@@ -518,8 +567,6 @@ function AppContent() {
     } catch { return []; }
   });
   const [activePlanDay, setActivePlanDay] = useState(null);
-  
-  // Track which day is currently being previewed in the Plan Tab Carousel
   const [viewingPlanDay, setViewingPlanDay] = useState(1);
 
   const [isQuickNoteOpen, setIsQuickNoteOpen] = useState(false);
@@ -542,15 +589,12 @@ function AppContent() {
   const [isInstallModalOpen, setIsInstallModalOpen] = useState(false);
 
   useEffect(() => {
-    // Check if app is already installed to home screen
     const standalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
     setIsStandalone(standalone);
 
-    // Detect if user is on iOS
     const ios = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
     setIsIOS(ios);
 
-    // Capture Android install prompt
     const handleBIP = (e) => {
       e.preventDefault();
       setDeferredPrompt(e);
@@ -565,6 +609,24 @@ function AppContent() {
       setSleepTimerOption(null);
       return;
     }
+
+    // --- PLAYLIST ADVANCE LOGIC ---
+    if (activePlaylist) {
+      const nextIndex = activePlaylistIndex + 1;
+      if (nextIndex < activePlaylist.playlist.length) {
+        setActivePlaylistIndex(nextIndex);
+        const nextTrack = activePlaylist.playlist[nextIndex];
+        setCurrentBook(nextTrack.book);
+        setCurrentChapter(nextTrack.chapter);
+        setCurrentVerse(1);
+        handleToggleAudio(nextTrack.book, nextTrack.chapter);
+      } else {
+        handleCloseAudio(); // End of playlist
+      }
+      return;
+    }
+
+    // --- STANDARD BIBLE ADVANCE LOGIC ---
     if (!currentAudioTrack) return;
     const bIndex = booksList.findIndex(b => b.name === currentAudioTrack.book);
     if (bIndex === -1) return;
@@ -629,9 +691,9 @@ function AppContent() {
       audio.removeEventListener('ended', onEnded);
       audio.removeEventListener('error', onError);
     };
-  }, [currentAudioTrack, booksList, sleepTimerOption]);
+  }, [currentAudioTrack, booksList, sleepTimerOption, activePlaylist, activePlaylistIndex]);
 
-  // --- SLEEP TIMER WITH 4-SECOND FADE-OUT ---
+  // --- SLEEP TIMER ---
   useEffect(() => {
     if (sleepTimerRef.current) clearTimeout(sleepTimerRef.current);
 
@@ -682,12 +744,12 @@ function AppContent() {
     if (!('mediaSession' in navigator) || !currentAudioTrack) return;
     
     navigator.mediaSession.metadata = new MediaMetadata({
-      title: `${currentAudioTrack.book} Chapter ${currentAudioTrack.chapter}`,
-      artist: "Human Audio Narration (KJV)",
+      title: activePlaylist ? activePlaylist.playlist[activePlaylistIndex].label : `${currentAudioTrack.book} Chapter ${currentAudioTrack.chapter}`,
+      artist: activePlaylist ? activePlaylist.title : "Human Audio Narration (KJV)",
       album: "God's Purpose System",
       artwork: [
-        { src: '/A%20splash.png?v=2', sizes: '512x512', type: 'image/png' },
-        { src: '/A%20splash.png?v=2', sizes: '192x192', type: 'image/png' }
+        { src: activePlaylist ? activePlaylist.cardImage : '/A%20splash.png?v=2', sizes: '512x512', type: 'image/png' },
+        { src: activePlaylist ? activePlaylist.cardImage : '/A%20splash.png?v=2', sizes: '192x192', type: 'image/png' }
       ]
     });
 
@@ -711,8 +773,23 @@ function AppContent() {
     });
     navigator.mediaSession.setActionHandler('seekbackward', () => handleAudioSkip(-15));
     navigator.mediaSession.setActionHandler('seekforward', () => handleAudioSkip(15));
-    navigator.mediaSession.setActionHandler('previoustrack', () => handlePrevChapter());
-    navigator.mediaSession.setActionHandler('nexttrack', () => handleAutoAdvance());
+    
+    // Only bind next/prev track to media session if a playlist is active
+    if (activePlaylist) {
+      navigator.mediaSession.setActionHandler('previoustrack', () => {
+         const prev = activePlaylistIndex - 1;
+         if (prev >= 0) {
+           setActivePlaylistIndex(prev);
+           const track = activePlaylist.playlist[prev];
+           setCurrentBook(track.book); setCurrentChapter(track.chapter); setCurrentVerse(1);
+           handleToggleAudio(track.book, track.chapter);
+         }
+      });
+      navigator.mediaSession.setActionHandler('nexttrack', () => handleAutoAdvance());
+    } else {
+      navigator.mediaSession.setActionHandler('previoustrack', () => handlePrevChapter());
+      navigator.mediaSession.setActionHandler('nexttrack', () => handleAutoAdvance());
+    }
 
     return () => {
       if ('mediaSession' in navigator) {
@@ -721,7 +798,7 @@ function AppContent() {
         });
       }
     };
-  }, [currentAudioTrack, audioDuration, audioCurrentTime, audioPlaybackRate]);
+  }, [currentAudioTrack, audioDuration, audioCurrentTime, audioPlaybackRate, activePlaylist, activePlaylistIndex]);
 
   // Verse sync
   useEffect(() => {
@@ -803,8 +880,9 @@ function AppContent() {
       await audio.play();
       setIsAudioPlaying(true);
     } catch (err) {
-      console.error("Audio playback error:", err);
+      console.error("Audio playback error! The server might be blocking you:", err);
       setIsAudioPlaying(false);
+      alert("Audio failed to load. If you have been testing all day, the AudioTreasure server may have temporarily rate-limited your IP address. Please check the browser console for a 403 or 429 error.");
     } finally {
       setIsAudioLoading(false);
     }
@@ -882,6 +960,8 @@ function AppContent() {
     setCurrentAudioTrack(null);
     setIsAudioPlaying(false);
     setIsAudioLoading(false);
+    setActivePlaylist(null);
+    setActivePlaylistIndex(0);
   };
 
   const handleBeginJourney = () => {
@@ -940,7 +1020,6 @@ function AppContent() {
   };
 
   useEffect(() => {
-    // Reset scroll when switching tabs
     window.scrollTo(0, 0);
     if (homeContainerRef.current) {
       homeContainerRef.current.scrollTo(0, 0);
@@ -1317,7 +1396,6 @@ function AppContent() {
     try { localStorage.setItem('bible_reader_theme', bibleTheme); } catch (e) {}
   }, [bibleTheme]);
 
-  // Sync viewingPlanDay up to the current daily assignment
   useEffect(() => {
     if (currentJourneyDay?.day) {
       setViewingPlanDay(currentJourneyDay.day);
@@ -1346,7 +1424,6 @@ function AppContent() {
         }
       }
       
-      // Auto-advance the plan slider to the next chronological day
       if (activePlanDay < 365) {
         setViewingPlanDay(activePlanDay + 1);
       }
@@ -1856,7 +1933,7 @@ function AppContent() {
                       <img 
                         src={card.cardImage} 
                         alt={card.title} 
-                        className="w-full h-auto rounded-[20px] shadow-lg border border-white/5 object-cover" 
+                        className="w-full aspect-square rounded-[20px] shadow-lg border border-white/5 object-cover object-center" 
                       />
                     </div>
                   ))}
@@ -1928,7 +2005,6 @@ function AppContent() {
           const selectedDayObj = CHRONOLOGICAL_PLAN.find(p => p.day === viewingPlanDay) || currentJourneyDay;
           const isSelectedCompleted = completedDays.includes(viewingPlanDay);
 
-          // Calculate exactly 5 days to show in the carousel surrounding the viewed day
           let startIdx = viewingPlanDay - 3;
           if (startIdx < 0) startIdx = 0;
           if (startIdx > CHRONOLOGICAL_PLAN.length - 5) startIdx = Math.max(0, CHRONOLOGICAL_PLAN.length - 5);
@@ -1951,23 +2027,18 @@ function AppContent() {
                   </div>
                 </div>
 
-                {/* Hero Image - Side to Side Full width (Bottom Cropped) */}
                 <div className="relative w-full h-[250px] overflow-hidden bg-[#0D1217]">
                   <img src="/Reading-top.png?v=2" alt="Chronological Reading" className="w-full h-full object-cover object-top block" />
                 </div>
                 
-                {/* Goal Progress Banner */}
                 <div className="bg-[#343941] px-5 py-3 flex items-center justify-between border-b border-[#1E2329]">
                   <div>
                     <p className="text-[15px] font-medium text-[#9BB181] tracking-tight">Journey Progress</p>
                     <p className="text-[11px] text-gray-300 font-normal">{completedDays.length} of 365 Days Completed</p>
                   </div>
                   <div className="relative w-[60px] h-[60px] bg-[#3B3F46] rounded-full flex items-center justify-center shadow-sm">
-                    {/* Dynamic SVG Progress Ring */}
                     <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 60 60">
-                      {/* Background track */}
                       <circle cx="30" cy="30" r="26" fill="transparent" stroke="#25282F" strokeWidth="5" />
-                      {/* Dynamic fill track */}
                       <circle
                         cx="30"
                         cy="30"
@@ -1987,7 +2058,6 @@ function AppContent() {
                   </div>
                 </div>
 
-                {/* --- 5-DAY CAROUSEL --- */}
                 <div className="flex w-full bg-[#1E2329] pt-3">
                   {visibleDays.map((plan) => {
                     const isDayDone = completedDays.includes(plan.day);
@@ -2023,7 +2093,6 @@ function AppContent() {
                   })}
                 </div>
 
-                {/* Reading Passage Breakdown Box */}
                 <div className="px-5 py-2 space-y-0 bg-[#1E2329]">
                   <div 
                     onClick={() => {
@@ -2048,7 +2117,6 @@ function AppContent() {
                 </div>
               </div>
 
-              {/* Bottom Action Button */}
               <div className="px-5 pt-4 pb-8">
                 <button
                   onClick={() => {
@@ -2474,7 +2542,6 @@ function AppContent() {
               })}
             </div>
 
-            {/* --- BOTTOM CHAPTER NAVIGATION FOOTER (CLEAR BG WITH BORDER ONLY) --- */}
             <div className="px-5 pt-4 pb-12 flex items-center justify-between gap-3 border-t border-black/5 dark:border-white/5">
               <button
                 onClick={handlePrevChapter}
@@ -2671,74 +2738,200 @@ function AppContent() {
           </main>
         )}
 
+        {/* --- NEW SACRED WORDS MODAL (PLAYLIST ENABLED) --- */}
+        {activeSpecialCard && (() => {
+          const isCardActivePlaylist = activePlaylist?.id === activeSpecialCard.id;
+          const isThisCardPlaying = isAudioPlaying && isCardActivePlaylist;
+          
+          return (
+            <div id="sacred-words-scroll" className="absolute inset-0 z-[70] flex flex-col bg-[#161C24] animate-in fade-in duration-200 overflow-y-auto scrollbar-none">
+              
+              {/* Hero Section WITH Gradient Background */}
+              <div className={`relative w-full flex-shrink-0 flex flex-col items-center pt-16 pb-8 px-6 bg-gradient-to-b ${activeSpecialCard.bgColor}`}>
+                <h2 className={`${activeSpecialCard.textColor} font-sans font-semibold text-[22px] mb-2 tracking-wide drop-shadow-sm`}>
+                  {activeSpecialCard.title}
+                </h2>
+                
+                {/* Unframed Image with true drop-shadow filter */}
+                <img 
+                  src={activeSpecialCard.cardImage} 
+                  alt={activeSpecialCard.title} 
+                  className="w-64 h-64 object-contain drop-shadow-[0_12px_24px_rgba(0,0,0,0.35)] -my-2" 
+                />
+                
+                <button onClick={() => { triggerHaptic('light'); setActiveSpecialCard(null); }} className="absolute top-10 right-5 w-8 h-8 rounded-full bg-black/20 backdrop-blur-md text-white flex items-center justify-center hover:bg-black/40 active:scale-95 transition-all shadow-sm z-20">
+                  <FiX size={18} />
+                </button>
+
+                <p className={`mt-4 ${activeSpecialCard.descColor} text-center font-sans text-[14px] leading-[1.6] max-w-[320px] drop-shadow-sm`}>
+                  {activeSpecialCard.description}
+                </p>
+
+                {/* Restored Sleek Black Button Design */}
+                <button 
+                  onClick={() => {
+                    triggerHaptic('medium');
+                    if (!isThisCardPlaying) {
+                      const firstTrack = activeSpecialCard.playlist[0];
+                      setActivePlaylist(activeSpecialCard);
+                      setActivePlaylistIndex(0);
+                      setCurrentBook(firstTrack.book);
+                      setCurrentChapter(firstTrack.chapter);
+                      setCurrentVerse(1);
+                      handleToggleAudio(firstTrack.book, firstTrack.chapter);
+                    } else {
+                      handleToggleAudio(currentAudioTrack.book, currentAudioTrack.chapter);
+                    }
+                  }}
+                  className="mt-6 bg-black/85 backdrop-blur-md border border-white/10 text-white font-normal text-[13.5px] py-1.5 px-6 rounded-[10px] shadow-lg flex items-center justify-center gap-2.5 active:scale-95 transition-all whitespace-nowrap"
+                >
+                  {isThisCardPlaying ? (
+                    <FaPause size={11} className="text-[#C6A87C]" />
+                  ) : (
+                    <FaPlay size={11} className="ml-0.5 text-[#C6A87C]" />
+                  )}
+                  <span>{isThisCardPlaying ? 'Pause Focus' : 'Play Focus'}</span>
+                </button>
+              </div>
+
+              {/* Playlist Tracks */}
+              <div className="w-full flex-1 relative z-30 flex flex-col bg-[#161C24]">
+                 <div className="bg-[#1E2631] px-6 pt-5 pb-4 border-y border-white/5">
+                   <h3 className="text-white font-sans font-bold text-[16px] tracking-wide">In this Focus</h3>
+                 </div>
+
+                 <div className="flex flex-col px-6 pt-2 pb-16">
+                    {activeSpecialCard.playlist.map((track, index) => {
+                       const isThisTrackPlaying = isCardActivePlaylist && activePlaylistIndex === index;
+                       return (
+                         <div 
+                           key={index} 
+                           onClick={() => { 
+                             triggerHaptic('light');
+                             setActivePlaylist(activeSpecialCard);
+                             setActivePlaylistIndex(index);
+                             setCurrentBook(track.book);
+                             setCurrentChapter(track.chapter);
+                             setCurrentVerse(1);
+                             handleToggleAudio(track.book, track.chapter);
+                           }}
+                           className="flex items-center gap-4 py-3.5 border-b border-white/10 active:bg-white/5 transition-all cursor-pointer last:border-0 group"
+                         >
+                           <div className={`w-8 h-8 flex-shrink-0 rounded-full flex items-center justify-center transition-colors ${isThisTrackPlaying ? 'bg-[#C6A87C] text-[#14202E]' : 'bg-white/5 text-gray-400 group-hover:bg-white/10'}`}>
+                              {isThisTrackPlaying && isAudioPlaying ? <FaPause size={10} /> : <FaPlay size={10} className="ml-0.5" />}
+                           </div>
+                           <p className={`font-sans font-bold text-[15px] leading-tight flex-1 ${isThisTrackPlaying ? 'text-[#C6A87C]' : 'text-white'}`}>
+                             {track.label}
+                           </p>
+                         </div>
+                       );
+                    })}
+                 </div>
+              </div>
+            </div>
+          );
+        })()}
+
         {/* --- FLOATING AUDIO PILL PLAYER --- */}
         {currentAudioTrack && (
-          <div className="absolute bottom-[68px] left-3 right-3 z-40 bg-[#161F2B]/95 backdrop-blur-md border border-[#2D3C4E]/80 text-white px-3.5 py-2.5 rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.6)] transition-all select-none">
-            <div className="flex items-center gap-2 text-[8.5px] text-gray-400 mb-1">
-              <span>{formatAudioTime(audioCurrentTime)}</span>
+          <div className="absolute bottom-[68px] left-3 right-3 z-[80] bg-[#161F2B]/95 backdrop-blur-md border border-[#2D3C4E]/80 text-white px-4 py-3.5 rounded-[1.25rem] shadow-[0_15px_40px_rgba(0,0,0,0.6)] transition-all select-none">
+            
+            {/* Top Row: Info */}
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-1.5">
+                 {isAudioPlaying && <span className="w-1.5 h-1.5 rounded-full bg-[#C6A87C] animate-pulse" />}
+                 {activePlaylist ? 'Now Playing' : 'Studio Narration'}
+              </span>
+              {activePlaylist && (
+                <span className="text-[10px] text-[#C6A87C] font-bold tracking-wide">
+                  {activePlaylistIndex + 1} of {activePlaylist.playlist.length}
+                </span>
+              )}
+            </div>
+
+            {/* Middle Row: Title */}
+            <p className="text-[15px] font-sans font-bold text-white truncate mb-2.5">
+               {activePlaylist ? activePlaylist.playlist[activePlaylistIndex].label : `${currentAudioTrack.book} ${currentAudioTrack.chapter}`}
+            </p>
+
+            {/* Progress Row */}
+            <div className="flex items-center gap-2.5 text-[9px] font-semibold tracking-wider text-gray-400 mb-3">
+              <span className="w-8 text-right">{formatAudioTime(audioCurrentTime)}</span>
               <input
                 type="range"
                 min={0}
                 max={audioDuration || 100}
                 value={audioCurrentTime}
                 onChange={(e) => handleAudioSeek(Number(e.target.value))}
-                className="w-full h-1 bg-gray-700/80 rounded-lg appearance-none cursor-pointer accent-[#C6A87C]"
+                className="w-full h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-[#C6A87C]"
               />
-              <span>{formatAudioTime(audioDuration)}</span>
+              <span className="w-8">{formatAudioTime(audioDuration)}</span>
             </div>
 
-            <div className="flex items-center justify-between">
-              <div 
-                onClick={() => {
-                  triggerHaptic('light');
-                  setCurrentBook(currentAudioTrack.book);
-                  setCurrentChapter(currentAudioTrack.chapter);
-                  setCurrentVerse(1);
-                  setActiveTab('Bible');
-                }}
-                className="flex flex-col cursor-pointer min-w-0 pr-2"
-              >
-                <p className="text-[12px] font-bold text-white truncate flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#C6A87C] animate-pulse" />
-                  {currentAudioTrack.book} {currentAudioTrack.chapter}
-                </p>
-                <p className="text-[8.5px] text-[#C6A87C] uppercase tracking-wider font-semibold">
-                  Studio Narration {sleepTimerOption ? `• Sleep: ${sleepTimerOption === 'chapter' ? 'End' : sleepTimerOption + 'm'}` : ''}
-                </p>
-              </div>
+            {/* Controls Row */}
+            <div className="flex items-center justify-center gap-6 mt-1">
+               {/* Skip Prev Track (Only visible in playlists) */}
+               {activePlaylist ? (
+                 <button 
+                   onClick={() => {
+                     const prev = activePlaylistIndex - 1;
+                     if (prev >= 0) {
+                       setActivePlaylistIndex(prev);
+                       const track = activePlaylist.playlist[prev];
+                       setCurrentBook(track.book); setCurrentChapter(track.chapter); setCurrentVerse(1);
+                       handleToggleAudio(track.book, track.chapter);
+                     }
+                   }} 
+                   disabled={activePlaylistIndex === 0}
+                   className={`p-2 ${activePlaylistIndex === 0 ? 'opacity-30 cursor-not-allowed' : 'text-gray-300 hover:text-white'}`}
+                 >
+                   <FiSkipBack size={18} />
+                 </button>
+               ) : <div className="w-[34px]" />}
 
-              <div className="flex items-center gap-2">
-                <button onClick={handleCycleSleepTimer} title="Sleep Timer" className={`p-1 ${sleepTimerOption ? 'text-[#C6A87C]' : 'text-gray-400 hover:text-white'}`}>
-                  <FiClock size={13} />
-                </button>
-                <button onClick={handleManualCacheTrack} title="Download chapter" className={`p-1 ${isTrackCached ? 'text-[#C6A87C]' : 'text-gray-400 hover:text-white'}`}>
-                  <FiDownloadCloud size={13} />
-                </button>
-                <button onClick={() => handleAudioSkip(-15)} title="Rewind 15s" className="p-1 text-gray-400 hover:text-white">
-                  <FiRotateCcw size={13} />
-                </button>
-                <button
+               {/* -15s */}
+               <button onClick={() => handleAudioSkip(-15)} className="text-gray-300 hover:text-white flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider">
+                 <FiRotateCcw size={16} /> <span className="mt-0.5">15s</span>
+               </button>
+
+               {/* PLAY/PAUSE */}
+               <button 
                   onClick={() => handleToggleAudio(currentAudioTrack.book, currentAudioTrack.chapter)}
-                  disabled={isAudioLoading}
-                  className="w-7 h-7 rounded-full bg-[#C6A87C] text-[#14202E] flex items-center justify-center font-bold shadow-md active:scale-90"
+                  className="w-12 h-12 rounded-full bg-[#C6A87C] text-[#14202E] flex items-center justify-center font-bold shadow-lg active:scale-90 transition-transform"
                 >
-                  {isAudioLoading ? <FaSpinner size={10} className="animate-spin text-[#14202E]" /> : isAudioPlaying ? <FaPause size={9} /> : <FaPlay size={9} className="ml-0.5" />}
+                  {isAudioLoading ? <FaSpinner size={14} className="animate-spin text-[#14202E]" /> : isAudioPlaying ? <FaPause size={13} /> : <FaPlay size={13} className="ml-0.5" />}
                 </button>
-                <button onClick={() => handleAudioSkip(15)} title="Forward 15s" className="p-1 text-gray-400 hover:text-white">
-                  <FiRotateCw size={13} />
-                </button>
-                <button 
-                  onClick={handleCycleAudioSpeed} 
-                  className="text-[8.5px] font-bold px-1.5 py-0.5 rounded bg-white/10 hover:bg-white/20 text-gray-200"
-                  title="Playback Speed"
-                >
-                  {audioPlaybackRate}x
-                </button>
-                <button onClick={handleCloseAudio} title="Close player" className="p-1 text-gray-400 hover:text-red-400">
-                  <FiX size={14} />
-                </button>
-              </div>
+
+               {/* +15s */}
+               <button onClick={() => handleAudioSkip(15)} className="text-gray-300 hover:text-white flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider">
+                 <span className="mt-0.5">15s</span> <FiRotateCw size={16} />
+               </button>
+
+               {/* Skip Next Track */}
+               {activePlaylist ? (
+                 <button 
+                   onClick={() => {
+                     const nxt = activePlaylistIndex + 1;
+                     if (nxt < activePlaylist.playlist.length) {
+                       setActivePlaylistIndex(nxt);
+                       const track = activePlaylist.playlist[nxt];
+                       setCurrentBook(track.book); setCurrentChapter(track.chapter); setCurrentVerse(1);
+                       handleToggleAudio(track.book, track.chapter);
+                     } else {
+                       handleCloseAudio();
+                     }
+                   }} 
+                   className="p-2 text-gray-300 hover:text-white"
+                 >
+                   <FiSkipForward size={18} />
+                 </button>
+               ) : (
+                 <button onClick={handleCloseAudio} className="p-2 text-gray-500 hover:text-red-400">
+                   <FiX size={18} />
+                 </button>
+               )}
             </div>
+
           </div>
         )}
 
@@ -2843,58 +3036,6 @@ function AppContent() {
             </div>
           </div>
         )}
-
-        {/* --- NEW SACRED WORDS MODAL --- */}
-        {activeSpecialCard && (() => {
-          const isThisCardPlaying = isAudioPlaying && currentAudioTrack?.book === activeSpecialCard.book && currentAudioTrack?.chapter === activeSpecialCard.chapter;
-          
-          return (
-            <div className="absolute inset-0 z-[70] flex flex-col bg-black animate-in fade-in duration-200">
-              <div className="relative w-full h-full flex flex-col items-center justify-center">
-                
-                <img 
-                  src={activeSpecialCard.pageImage} 
-                  alt={activeSpecialCard.title} 
-                  className="absolute inset-0 w-full h-full object-cover" 
-                />
-                
-                <button
-                  onClick={() => {
-                    triggerHaptic('light');
-                    setActiveSpecialCard(null);
-                  }}
-                  className="absolute top-6 right-5 w-8 h-8 rounded-full bg-black/40 backdrop-blur-md text-white flex items-center justify-center hover:bg-black/60 active:scale-95 transition-all shadow-lg z-10"
-                >
-                  <FiX size={18} />
-                </button>
-
-                {/* Elevated to 55% to clear the text block */}
-                <div className="absolute top-[55%] left-1/2 -translate-x-1/2 z-10">
-                  <button 
-                    onClick={() => {
-                      triggerHaptic('medium');
-                      // Quietly sync the app's internal state so the audio engine doesn't drop the track
-                      if (!isThisCardPlaying) {
-                        setCurrentBook(activeSpecialCard.book);
-                        setCurrentChapter(activeSpecialCard.chapter);
-                        setCurrentVerse(1);
-                      }
-                      handleToggleAudio(activeSpecialCard.book, activeSpecialCard.chapter);
-                    }}
-                    className="bg-black/85 backdrop-blur-md border border-white/15 text-white font-normal text-[13.5px] py-2 px-5 rounded-full shadow-2xl flex items-center justify-center gap-2.5 active:scale-95 transition-all whitespace-nowrap"
-                  >
-                    {isThisCardPlaying ? (
-                      <FaPause size={11} className="text-[#C6A87C]" />
-                    ) : (
-                      <FaPlay size={11} className="ml-0.5 text-[#C6A87C]" />
-                    )}
-                    <span>Listen to {activeSpecialCard.title === 'Beatitudes' ? 'The Beatitudes' : `The ${activeSpecialCard.title}`}</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          );
-        })()}
 
         {/* --- FEATURED DIRECTION DEVOTIONAL MODAL --- */}
         {selectedDirection && (
